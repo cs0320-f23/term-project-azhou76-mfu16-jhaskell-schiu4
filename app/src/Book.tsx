@@ -1,6 +1,7 @@
 // create boilerplate for Book component
 import React, { useState } from "react";
 interface BookProps {
+  id: number;
   imgPath: string;
   title: string;
   author: string;
@@ -9,6 +10,7 @@ interface BookProps {
 }
 // add id
 function Book({
+  id,
   imgPath,
   title,
   author,
@@ -19,7 +21,7 @@ function Book({
 
   return (
     <div className="card rounded-md bg-white w-80 p-4 flex-shrink-0 flex flex-col hover:shadow-2xl my-12 transition-all cursor-pointer shadow-sm">
-      <a href={`/media/${title}`}>
+      <a href={`/media/${id}`}>
         <img
           src={imgPath}
           alt=""

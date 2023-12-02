@@ -76,7 +76,8 @@ function App() {
           {filteredBooks.map(book => {
             return (
               <Book
-                key={book.title}
+                id={book.id}
+                key={book.id}
                 author={book.author}
                 imgPath={book.imgPath}
                 title={book.title}
@@ -89,6 +90,8 @@ function App() {
       </div>
 
       <SearchBar onChange={setSearchQuery} />
+
+      
     </div>
   );
 }
