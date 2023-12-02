@@ -61,14 +61,21 @@ const books = [
 
 function App() {
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [genre, setGenre] = React.useState("all");
 
   const filteredBooks = books.filter(book =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ).filter(book => {
+    if (genre.toLowerCase() === "all") {
+      return true;
+    }
+    return book.genres.includes(genre.toLowerCase());
+  })
+
 
   return (
     <div className="flex flex-col h-screen justify-between">
-      <NavBar />
+      <NavBar onChange={setGenre} />
 
       <div className="flex-grow">
         {/* Main content */}
