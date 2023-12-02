@@ -58,7 +58,14 @@ const books = [
       "The novel follows a few days in the life of Holden Caulfield, a troubled teenager who has been expelled from prep school. Disillusioned and alone, he wanders New York City, grappling with issues of identity, belonging, and the loss of innocence.",
   },
 ];
+
 function App() {
+  const [searchQuery, setSearchQuery] = React.useState("");
+
+  const filteredBooks = books.filter(book =>
+    book.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="flex flex-col h-screen justify-between">
       <NavBar />
@@ -66,7 +73,7 @@ function App() {
       <div className="flex-grow">
         {/* Main content */}
         <ul className="flex flex-row overflow-x-auto scrolling-touch items-start">
-          {books.map(book => {
+          {filteredBooks.map(book => {
             return (
               <Book
                 key={book.title}
@@ -81,7 +88,7 @@ function App() {
         </ul>
       </div>
 
-      <SearchBar />
+      <SearchBar onChange={setSearchQuery} />
     </div>
   );
 }
