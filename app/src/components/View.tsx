@@ -15,7 +15,7 @@ function View() {
     <div className="w-screen flex flex-col items-center justify-center bg-orange-100">
       <ViewBar />
       {/* <h1 className="text-4xl font-bold fixed top-0 w-screen bg-inherit text-center">View: {id}</h1> */}
-      <p className="text-lg md:text-xl text-black font-merriweather text-left xl:px-64 px-10 mx-auto  pt-56">
+      <p className="text-lg md:text-xl text-black font-merriweather text-left xl:px-64 px-10 mx-auto  pt-56 pb-20">
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Totam,
         officiis? Quia, tenetur optio natus placeat et voluptate repudiandae
         saepe animi deserunt beatae minima consequatur dolore inventore

@@ -59,19 +59,28 @@ const books = [
   },
 ];
 
+window.addEventListener("keydown", function (e) {
+  if (e.keyCode === 114 || (e.keyCode === 70)) {
+    e.preventDefault();
+    console.log(document.getElementById("search"));
+    document.getElementById("search")!.focus();
+  }
+});
+
 function App() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [genre, setGenre] = React.useState("all");
 
-  const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(searchQuery.toLowerCase())
-  ).filter(book => {
-    if (genre.toLowerCase() === "all") {
-      return true;
-    }
-    return book.genres.includes(genre.toLowerCase());
-  })
-
+  const filteredBooks = books
+    .filter(book =>
+      book.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter(book => {
+      if (genre.toLowerCase() === "all") {
+        return true;
+      }
+      return book.genres.includes(genre.toLowerCase());
+    });
 
   return (
     <div className="flex flex-col h-screen justify-between">
@@ -97,8 +106,6 @@ function App() {
       </div>
 
       <SearchBar onChange={setSearchQuery} />
-
-      
     </div>
   );
 }
