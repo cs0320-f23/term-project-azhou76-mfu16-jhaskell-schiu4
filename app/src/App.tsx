@@ -1,7 +1,7 @@
 import React from "react";
 import NavBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
-import Book from "./Book";
+import Book from "./components/Book";
 const books = [
   {
     id: 1,
