@@ -83,12 +83,12 @@ function App() {
     });
 
   return (
-    <div className="flex flex-col h-screen justify-between">
+    <div className="flex flex-col h-screen justify-between bg-orange-50">
       <NavBar onChange={setGenre} />
 
       <div className="flex-grow">
         {/* Main content */}
-        <ul className="flex flex-row overflow-x-auto scrolling-touch items-start">
+        <div className="grid grid-cols-4 w-screen h-screen overflow-y-auto">
           {filteredBooks.map(book => {
             return (
               <Book
@@ -102,10 +102,10 @@ function App() {
               />
             );
           })}
-        </ul>
-      </div>
+        </div>
+        </div>
 
-      <SearchBar onChange={setSearchQuery} />
+      <SearchBar onChange={setSearchQuery} fixed />
     </div>
   );
 }
