@@ -45,15 +45,23 @@ recordRoutes.route("/signIn").get(async function (req, res) {
     if (!records) {
       return res.status(401).json({ message: "Email incorrect" });
     } else {
-      const passwordCorrect = await bcrypt.compare(password, records.password);
+      try {
+        const passwordCorrect = await bcrypt.compare(
+          password,
+          records.password
+        );
 
-      if (!passwordCorrect) {
-        return res
-          .status(401)
-          .json({ message: "Username or Password Incorrect" });
+        if (!passwordCorrect) {
+          return res
+            .status(401)
+            .json({ message: "Username or Password Incorrect" });
+        }
+
+        res.status(200).json({ message: "Successfully logged in" });
+      } catch (error) {
+        console.error("Error comparing passwords:", error);
+        res.status(500).json({ error: "Internal Server Error" });
       }
-
-      res.status(201).json({ message: "Successfully logged in" });
     }
   } catch (e) {
     console.log("An error occurred pulling the user. " + e);
