@@ -60,7 +60,7 @@ const books = [
 ];
 
 window.addEventListener("keydown", function (e) {
-  if (e.keyCode === 114 || (e.keyCode === 70)) {
+  if (e.keyCode === 114 || e.keyCode === 70) {
     e.preventDefault();
     console.log(document.getElementById("search"));
     document.getElementById("search")!.focus();
@@ -72,10 +72,10 @@ function App() {
   const [genre, setGenre] = React.useState("all");
 
   const filteredBooks = books
-    .filter(book =>
+    .filter((book) =>
       book.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .filter(book => {
+    .filter((book) => {
       if (genre.toLowerCase() === "all") {
         return true;
       }
@@ -89,7 +89,7 @@ function App() {
       <div className="flex-grow">
         {/* Main content */}
         <div className="grid grid-cols-4 w-screen h-screen overflow-y-auto">
-          {filteredBooks.map(book => {
+          {filteredBooks.map((book) => {
             return (
               <Book
                 id={book.id}
@@ -103,7 +103,7 @@ function App() {
             );
           })}
         </div>
-        </div>
+      </div>
 
       <SearchBar onChange={setSearchQuery} fixed />
     </div>
