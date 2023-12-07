@@ -8,7 +8,7 @@ function NavBar({ onChange }: NavBarProps) {
       <li>
         <div
           className="hover:cursor-pointer hover:text-purple-600 transition-all duration-150"
-          onClick={(e) => onChange("all")}
+          onClick={e => onChange("all")}
         >
           All
         </div>
@@ -16,7 +16,7 @@ function NavBar({ onChange }: NavBarProps) {
       <li>
         <div
           className="hover:cursor-pointer hover:text-purple-600 transition-all duration-150"
-          onClick={(e) => onChange("fiction")}
+          onClick={e => onChange("fiction")}
         >
           Fiction
         </div>
@@ -24,7 +24,7 @@ function NavBar({ onChange }: NavBarProps) {
       <li>
         <div
           className="hover:cursor-pointer hover:text-purple-600 transition-all duration-150"
-          onClick={(e) => onChange("nonfiction")}
+          onClick={e => onChange("nonfiction")}
         >
           Nonfiction
         </div>
