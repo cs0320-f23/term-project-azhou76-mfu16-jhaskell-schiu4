@@ -1,7 +1,7 @@
 import React from "react";
 import NavBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
-import Book from "./Book";
+import Book from "./components/Book";
 const books = [
   {
     id: 1,
@@ -59,20 +59,36 @@ const books = [
   },
 ];
 
+window.addEventListener("keydown", function (e) {
+  if (e.keyCode === 114 || (e.keyCode === 70)) {
+    e.preventDefault();
+    console.log(document.getElementById("search"));
+    document.getElementById("search")!.focus();
+  }
+});
+
 function App() {
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [genre, setGenre] = React.useState("all");
 
-  const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredBooks = books
+    .filter(book =>
+      book.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter(book => {
+      if (genre.toLowerCase() === "all") {
+        return true;
+      }
+      return book.genres.includes(genre.toLowerCase());
+    });
 
   return (
-    <div className="flex flex-col h-screen justify-between">
-      <NavBar />
+    <div className="flex flex-col h-screen justify-between bg-orange-50">
+      <NavBar onChange={setGenre} />
 
       <div className="flex-grow">
         {/* Main content */}
-        <ul className="flex flex-row overflow-x-auto scrolling-touch items-start">
+        <div className="grid grid-cols-4 w-screen h-screen overflow-y-auto">
           {filteredBooks.map(book => {
             return (
               <Book
@@ -86,12 +102,10 @@ function App() {
               />
             );
           })}
-        </ul>
-      </div>
+        </div>
+        </div>
 
-      <SearchBar onChange={setSearchQuery} />
-
-      
+      <SearchBar onChange={setSearchQuery} fixed />
     </div>
   );
 }

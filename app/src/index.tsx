@@ -9,13 +9,15 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import View from "./View";
+import View from "./components/View";
 
 const router = createBrowserRouter(
-  createRoutesFromElements(<>
-    <Route path="/" element={<App />} />
-     <Route path="/media/:id" element={<View />} />
-  </>)
+  createRoutesFromElements(
+    <>
+      <Route path="/" element={<App />} />
+      <Route path="/media/:id" element={<View />} />
+    </>
+  )
 );
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
