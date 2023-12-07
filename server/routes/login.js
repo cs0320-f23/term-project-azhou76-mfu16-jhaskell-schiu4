@@ -6,6 +6,7 @@ const express = require("express");
 // We use it to define our routes.
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const recordRoutes = express.Router();
+const port = 8000;
 
 // This will help us connect to the database
 const dbo = require("../db/conn");
@@ -66,4 +67,8 @@ recordRoutes.route("/signIn").get(async function (req, res) {
   } catch (e) {
     console.log("An error occurred pulling the user. " + e);
   }
+});
+
+recordRoutes.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
 });
