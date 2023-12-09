@@ -146,6 +146,44 @@ recordRoutes.get("/searchbook", async (req, res) => {
   }
 });
 
+// TO TEST, in another terminal run: curl -X PUT http://localhost:8000/addcomment
+recordRoutes.put("/addcomment", async (req, res) => {
+  //   const { id } = req.params; //IGNORE
+  //   const newData = req.body; //IGNORE
+  let db = client.db(dbName);
+  //   const {bookId, chapter, startIndex, endIndex, comment} = req.query; // uncomment when integrating
+  const bookId = "2";
+  const chapter = "chapter2";
+  const startIndex = "20";
+  const endIndex = "50";
+  const comment = "This is the added comment";
+
+  try {
+    const collection = db.collection("books");
+    const updateKey = "comments." + chapter;
+    const result = await collection.updateOne(
+      { bookID: bookId },
+      {
+        $push: {
+          [updateKey]: {
+            startIndex: parseInt(startIndex),
+            endIndex: parseInt(endIndex),
+            content: comment,
+          },
+        },
+      }
+    );
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+
+    return res.json({ message: "Document updated successfully" });
+  } catch (error) {
+    console.error("Error updating document:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 recordRoutes.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
