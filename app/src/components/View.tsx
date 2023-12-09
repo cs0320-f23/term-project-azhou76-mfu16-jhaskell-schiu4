@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import NavBar from "./Navbar";
+import NavBar from "./NavBar";
 import ViewBar from "./ViewBar";
-import SearchBar from "./Searchbar";
+import SearchBar from "./SearchBar";
+import CommentModal from "./CommentModal";
 
 function View() {
   const { bookId, chapterId } = useParams();
@@ -28,6 +29,11 @@ function View() {
     }
   };
 
+  const handleCommentSubmit = (comment: string) => {
+    console.log('Comment on "', selectedText, '": ', comment);
+    // Here you can handle the comment (e.g., send to server, store in state)
+  };
+
   function getContent(id: string): {
     [key: string]: string | { [key: string]: string };
   } {
@@ -45,6 +51,7 @@ function View() {
   return (
     <div className="w-screen flex flex-col items-center justify-center bg-orange-100">
       <ViewBar />
+
       {/* <h1 className="text-4xl font-bold fixed top-0 w-screen bg-inherit text-center">View: {id}</h1> */}
       <div className="text-2xl text-center fixed top-20 w-screen py-4 bg-inherit">
         {bookId && (getContent(bookId)["Title"] as string)}

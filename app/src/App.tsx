@@ -1,6 +1,6 @@
 import React from "react";
-import NavBar from "./components/Navbar";
-import SearchBar from "./components/Searchbar";
+import NavBar from "./components/NavBar";
+import SearchBar from "./components/SearchBar";
 import Book from "./components/Book";
 const books = [
   {
