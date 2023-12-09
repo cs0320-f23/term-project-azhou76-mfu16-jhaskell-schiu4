@@ -9,6 +9,7 @@ const books = [
     title: "The Hobbit",
     author: "J.R.R. Tolkien",
     genres: ["fantasy", "fiction", "adventure"],
+    favorited: true,
     description:
       "Bilbo Baggins, a hobbit, is smoking in his porchway one day when Gandalf the Wizard visits him. He wants Bilbo to help a group of dwarves take back the Mountain from Smaug, a dragon. Bilbo is unsure he wants to help, but he is drawn in by Gandalf and the dwarves and embarks on the journey of a lifetime.",
   },
@@ -18,6 +19,7 @@ const books = [
     title: "The Fellowship of the Ring",
     author: "J.R.R. Tolkien",
     genres: ["fantasy", "fiction", "adventure"],
+    favorited: true,
     description:
       "Frodo Baggins, a hobbit, inherits the One Ring from his uncle, Bilbo Baggins. Frodo must take the Ring to Mount Doom to destroy it, before the Dark Lord Sauron can reclaim it.",
   },
@@ -27,6 +29,7 @@ const books = [
     title: "1984",
     author: "George Orwell",
     genres: ["dystopian", "political fiction", "science fiction"],
+    favorited: false,
     description:
       "Set in a dystopian future where society is ruled by an omnipresent government led by Big Brother, 1984 explores themes of totalitarianism, mass surveillance, and repressive regimentation of all persons and behaviors within society.",
   },
@@ -36,6 +39,7 @@ const books = [
     title: "To Kill a Mockingbird",
     author: "Harper Lee",
     genres: ["classic", "historical fiction"],
+    favorited: false,
     description:
       "The story, set in the 1930s, follows a young girl named Scout and her brother, Jem, in the sleepy Alabama town of Maycomb. Their father, Atticus Finch, is a lawyer who takes on the case of a black man accused of assaulting a white woman, exploring themes of racial injustice and moral growth.",
   },
@@ -45,6 +49,7 @@ const books = [
     title: "Pride and Prejudice",
     author: "Jane Austen",
     genres: ["classic", "romance", "literature"],
+    favorited: false,
     description:
       "Set in rural England in the early 19th century, 'Pride and Prejudice' tells the story of the Bennet family, focusing on the relationship between Elizabeth Bennet and Mr. Darcy. The novel explores themes of love, marriage, and societal expectations.",
   },
@@ -54,10 +59,13 @@ const books = [
     title: "The Catcher in the Rye",
     author: "J.D. Salinger",
     genres: ["classic", "coming-of-age", "literature"],
+    favorited: false,
     description:
       "The novel follows a few days in the life of Holden Caulfield, a troubled teenager who has been expelled from prep school. Disillusioned and alone, he wanders New York City, grappling with issues of identity, belonging, and the loss of innocence.",
   },
 ];
+
+
 
 window.addEventListener("keydown", function (e) {
   if (e.keyCode === 114 || e.keyCode === 70) {
@@ -70,9 +78,9 @@ window.addEventListener("keydown", function (e) {
 function App() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [genre, setGenre] = React.useState("all");
-
-  const filteredBooks = books
-    .filter((book) =>
+  const [favorites, setFavorites] = React.useState(false);
+  
+  const filteredBooks = books.filter(book => !favorites || book.favorited).filter((book) =>
       book.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .filter((book) => {
@@ -84,7 +92,7 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen justify-between bg-orange-50">
-      <NavBar onChange={setGenre} />
+      <NavBar onChange={setGenre} setFavorites={setFavorites} />
 
       <div className="flex-grow">
         {/* Main content */}

@@ -21,7 +21,7 @@ function Book({
 
   return (
     <div className="card rounded-md bg-white w-80 p-4 flex-shrink-0 flex flex-col hover:shadow-2xl my-12 transition-all cursor-pointer shadow-sm hover:cursor-pointer">
-      <a href={`/media/${id}`}>
+      <a href={`/media/${id}/1`}>
         <img
           src={imgPath}
           alt=""

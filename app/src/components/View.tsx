@@ -5,11 +5,28 @@ import ViewBar from "./ViewBar";
 import SearchBar from "./SearchBar";
 
 function View() {
-  const { id } = useParams();
-  console.log(id);
+  const { bookId, chapterId } = useParams();
+  console.log(bookId, chapterId);
   function handleSearch(value: string) {
     console.log(value);
   }
+
+  document.onmouseup = function (): void {
+    const selection: Selection | null = window.getSelection();
+
+    if (selection) {
+      let start: number = selection.anchorOffset;
+      let end: number = selection.focusOffset;
+
+      // Ensure start is always less than end
+      if (start > end) {
+        [start, end] = [end, start];
+      }
+
+      console.log("Start index: " + start);
+      console.log("End index: " + end);
+    }
+  };
 
   function getContent(id: string): {
     [key: string]: string | { [key: string]: string };
@@ -30,18 +47,18 @@ function View() {
       <ViewBar />
       {/* <h1 className="text-4xl font-bold fixed top-0 w-screen bg-inherit text-center">View: {id}</h1> */}
       <div className="text-2xl text-center fixed top-20 w-screen py-4 bg-inherit">
-        {id && (getContent(id)["Title"] as string)}
+        {bookId && (getContent(bookId)["Title"] as string)}
       </div>
       <div className="text-lg md:text-xl text-black font-merriweather text-left xl:px-64 px-10 mx-auto  pt-56 pb-20">
-        {id &&
-          Object.entries(
-            getContent(id)["Chapters"] as { [key: string]: string }
-          ).map(([key, value]) => (
-            <div key={key}>
-              <h2 className="font-bold">{key}</h2>
-              <p>{value}</p>
-            </div>
-          ))}
+        {bookId && (
+          <div>
+            {
+              (getContent(bookId)["Chapters"] as { [key: string]: string })[
+                "Chapter 1"
+              ]
+            }
+          </div>
+        )}
       </div>
       <SearchBar fixed onChange={handleSearch} />
     </div>
