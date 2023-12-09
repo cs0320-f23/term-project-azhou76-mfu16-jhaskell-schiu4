@@ -29,10 +29,6 @@ function View() {
     }
   };
 
-  const handleCommentSubmit = (comment: string) => {
-    console.log('Comment on "', selectedText, '": ', comment);
-    // Here you can handle the comment (e.g., send to server, store in state)
-  };
 
   function getContent(id: string): {
     [key: string]: string | { [key: string]: string };
