@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import NavBar from "./NavBar";
 import ViewBar from "./ViewBar";
 import SearchBar from "./SearchBar";
 import CommentModal from "./CommentModal";
+import { useFloating, offset, flip } from "@floating-ui/react-dom";
+
 
 function View() {
   const { bookId, chapterId } = useParams();
@@ -11,6 +13,21 @@ function View() {
   function handleSearch(value: string) {
     console.log(value);
   }
+
+   const [selectedText, setSelectedText] = useState<string>("");
+   const [isCommentOpen, setIsCommentOpen] = useState<boolean>(false);
+   const commentRef = useRef(null);
+
+   const handleTextSelection = () => {
+     const selection = window.getSelection();
+     if (selection && selection.toString().trim() !== "") {
+       setSelectedText(selection.toString());
+       setIsCommentOpen(true);
+       // Positioning logic for the comment modal
+     } else {
+       setIsCommentOpen(false);
+     }
+   };
 
   document.onmouseup = function (): void {
     const selection: Selection | null = window.getSelection();
@@ -45,8 +62,11 @@ function View() {
   }
 
   return (
-    <div className="w-screen flex flex-col items-center justify-center bg-orange-100">
+    <div className="w-screen flex flex-col items-center justify-center bg-orange-100" onMouseUp={handleTextSelection}>
       <ViewBar />
+      {isCommentOpen && <CommentModal selectedText={selectedText} onClose={function (): void {
+        throw new Error("Function not implemented.");
+      } } />}
 
       {/* <h1 className="text-4xl font-bold fixed top-0 w-screen bg-inherit text-center">View: {id}</h1> */}
       <div className="text-2xl text-center fixed top-20 w-screen py-4 bg-inherit">

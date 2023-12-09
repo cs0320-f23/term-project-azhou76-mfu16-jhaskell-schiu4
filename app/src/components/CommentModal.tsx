@@ -1,36 +1,50 @@
-import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
+import React, { useState, useRef, useEffect } from "react";
+import { useFloating, offset, flip } from "@floating-ui/react-dom";
 
-type CommentModalProps = {
-    isOpen: boolean;
-    position: { x: number; y: number };
-    onRequestClose: () => void;
-    onSubmit: (comment: string) => void;
-    };
-const CommentModal = ({ isOpen, position, onRequestClose, onSubmit }: CommentModalProps) => {
-  const [comment, setComment] = useState("");
+interface CommentModalProps {
+  selectedText: string;
+  onClose: () => void;
+}
 
-  const handleSubmit = () => {
-    onSubmit(comment);
-    setComment("");
-    onRequestClose();
-  };
+const CommentModal: React.FC<CommentModalProps> = ({
+  selectedText,
+  onClose,
+}) => {
+  const [comment, setComment] = useState<string>("");
+  const floatingRef = useRef<HTMLDivElement>(null);
+  const { x, y, strategy, update } = useFloating({
+    placement: "right",
+    strategy: "fixed",
+    middleware: [offset(10), flip()],
+  });
 
-  const modalStyle = {
-    content: {
-      top: `${position.y}px`,
-      left: `${position.x}px`,
-      right: "auto",
-      bottom: "auto",
-      transform: "translate(-50%, -100%)", // Adjust to position above the selection
-    },
+  useEffect(() => {
+    update();
+  }, [selectedText, update]);
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log("Comment:", comment); // Handle the comment submission here
+    onClose(); // Close the modal
   };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={modalStyle}>
-      <textarea value={comment} onChange={e => setComment(e.target.value)} />
-      <button onClick={handleSubmit}>Submit Comment</button>
-    </Modal>
+    <div
+      id="floating"
+      style={{ position: strategy, bottom: y ?? 0, right: x ?? 0, zIndex: 1000 }}
+    >
+      <div ref={floatingRef}>
+        <p>Selected Text: {selectedText}</p>
+        <form onSubmit={handleSubmit}>
+          <textarea
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+            placeholder="Enter your comment"
+          />
+          <button type="submit">Submit Comment</button>
+        </form>
+      </div>
+    </div>
   );
 };
 
