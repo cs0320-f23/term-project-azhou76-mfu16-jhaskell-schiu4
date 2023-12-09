@@ -1,8 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import NavBar from "./NavBar";
+import NavBar from "./Navbar";
 import ViewBar from "./ViewBar";
-import SearchBar from "./SearchBar";
+import SearchBar from "./Searchbar";
 
 function View() {
   const { bookId, chapterId } = useParams();
