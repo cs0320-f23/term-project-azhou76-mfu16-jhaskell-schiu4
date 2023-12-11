@@ -84,7 +84,7 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen justify-between bg-orange-50">
-      <NavBar onChange={setGenre} setFavorites={setFavorites} />
+      <NavBar onChange={setGenre} setFavorites={setFavorites} genre={genre} favorites={favorites} setGenre={setGenre} />
 
       <div className="flex-grow">
         {/* Main content */}
