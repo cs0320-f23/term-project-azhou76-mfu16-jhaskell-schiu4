@@ -86,7 +86,7 @@ function App() {
     <div className="flex flex-col h-screen justify-between bg-orange-50">
       <NavBar onChange={setGenre} setFavorites={setFavorites} genre={genre} favorites={favorites} setGenre={setGenre} />
 
-      <div className="flex-grow">
+      <div className="flex-grow my-8">
         {/* Main content */}
         <div className="grid grid-cols-4 w-screen h-screen overflow-y-auto">
           {filteredBooks.map((book) => {
