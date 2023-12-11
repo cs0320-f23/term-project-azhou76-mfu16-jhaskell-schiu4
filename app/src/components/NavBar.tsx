@@ -16,10 +16,10 @@ function NavBar({
   console.log(favorites);
 
   return (
-    <ul className="h-14 w-full items-center justify-center bg-white flex gap-4 p-6 font-semibold text-blue-500">
+    <ul className="h-14 w-full items-center justify-center bg-white flex gap-4 p-6 font-semibold text-blue-500 [& *]:transition-all [& *]:duration-450 ">
       <li>
         <div
-          className={`hover:cursor-pointer hover:text-purple-600 transition-all duration-150  ${
+          className={`hover:cursor-pointer hover:text-purple-400 transition-all duration-150  ${
             favorites ? "text-purple-600" : ""
           }`}
           onClick={e => {
@@ -32,7 +32,7 @@ function NavBar({
       </li>
       <li>
         <div
-          className={`hover:cursor-pointer hover:text-purple-600 transition-all duration-150 ${
+          className={`hover:cursor-pointer hover:text-purple-400 transition-all duration-150 ${
             genre === "all" && !favorites ? "text-purple-600" : ""
           }`}
           onClick={e => {
@@ -45,7 +45,7 @@ function NavBar({
       </li>
       <li>
         <div
-          className={`hover:cursor-pointer hover:text-purple-600 transition-all duration-150 ${
+          className={`hover:cursor-pointer hover:text-purple-400 transition-all duration-150 ${
             genre === "fiction" ? "text-purple-600" : ""
           }`}
           onClick={e => {
@@ -58,7 +58,7 @@ function NavBar({
       </li>
       <li>
         <div
-          className={`hover:cursor-pointer hover:text-purple-600 transition-all duration-150 ${
+          className={`hover:cursor-pointer hover:text-purple-400 transition-all duration-150 ${
             genre === "nonfiction" ? "text-purple-600" : ""
           }`}
           onClick={e => {
