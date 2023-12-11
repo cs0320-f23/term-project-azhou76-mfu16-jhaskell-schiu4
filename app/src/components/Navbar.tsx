@@ -5,17 +5,19 @@ type NavBarProps = {
 };
 function NavBar({ onChange, setFavorites }: NavBarProps) {
   return (
-    <ul className="h-14 w-full items-center justify-center bg-gray-200 flex gap-4">
+    <ul className="h-14 w-full items-center justify-center bg-white flex gap-4 p-6 font-semibold text-blue-500">
       <li>
         <div
           className="hover:cursor-pointer hover:text-purple-600 transition-all duration-150"
-          onClick={(e) => setFavorites(true)}
+          onClick={e => setFavorites(true)}
         >
           Favorites
         </div>
+      </li>
+      <li>
         <div
           className="hover:cursor-pointer hover:text-purple-600 transition-all duration-150"
-          onClick={(e) => {
+          onClick={e => {
             onChange("all");
             setFavorites(false);
           }}
@@ -26,7 +28,7 @@ function NavBar({ onChange, setFavorites }: NavBarProps) {
       <li>
         <div
           className="hover:cursor-pointer hover:text-purple-600 transition-all duration-150"
-          onClick={(e) => onChange("fiction")}
+          onClick={e => onChange("fiction")}
         >
           Fiction
         </div>
@@ -34,7 +36,7 @@ function NavBar({ onChange, setFavorites }: NavBarProps) {
       <li>
         <div
           className="hover:cursor-pointer hover:text-purple-600 transition-all duration-150"
-          onClick={(e) => onChange("nonfiction")}
+          onClick={e => onChange("nonfiction")}
         >
           Nonfiction
         </div>
