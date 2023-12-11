@@ -67,14 +67,6 @@ const books = [
 
 
 
-window.addEventListener("keydown", function (e) {
-  if (e.keyCode === 114 || e.keyCode === 70) {
-    e.preventDefault();
-    console.log(document.getElementById("search"));
-    document.getElementById("search")!.focus();
-  }
-});
-
 function App() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [genre, setGenre] = React.useState("all");
