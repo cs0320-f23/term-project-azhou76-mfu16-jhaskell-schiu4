@@ -5,6 +5,7 @@ import ViewBar from "./ViewBar";
 import SearchBar from "./SearchBar";
 import CommentModal from "./CommentModal";
 import { useFloating, offset, flip } from "@floating-ui/react-dom";
+import { SelectedText } from "../types/types";
 
 function View() {
   const { bookId, chapterId } = useParams();
@@ -13,14 +14,19 @@ function View() {
     console.log(value);
   }
 
-  const [selectedText, setSelectedText] = useState<string>("");
+  const [selectedText, setSelectedText] = useState<SelectedText>({text: "", needsCutoff: false});
   const [isCommentOpen, setIsCommentOpen] = useState<boolean>(false);
   const commentRef = useRef<HTMLDivElement>(null);
 
   const handleTextSelection = (event: React.MouseEvent) => {
     const selection = window.getSelection();
     if (selection && selection.toString().trim() !== "") {
-      setSelectedText(selection.toString());
+        if (selection.toString().length > 50) {
+          setSelectedText({text: selection.toString(), needsCutoff: true});
+        } else {
+          setSelectedText({text: selection.toString(), needsCutoff: false});
+        }
+    
       setIsCommentOpen(true);
       // Positioning logic for the comment modal
     } else {
@@ -82,7 +88,7 @@ function View() {
       <div className="text-2xl text-center fixed top-20 w-screen py-4 bg-inherit">
         {bookId && (getContent(bookId)["Title"] as string)}
       </div>
-      <div className="text-lg md:text-xl text-black font-merriweather text-left xl:px-64 px-10 mx-auto  pt-56 pb-20">
+      <div className="text-lg md:text-xl text-black font-merriweather text-left xl:pr-[40rem] px-10 mx-auto  pt-56 pb-20">
         {bookId && (
           <div>
             {
