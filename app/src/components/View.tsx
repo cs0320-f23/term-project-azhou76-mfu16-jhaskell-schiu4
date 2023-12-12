@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import NavBar from "./Navbar";
+import NavBar from "./NavBar";
 import ViewBar from "./ViewBar";
-import SearchBar from "./Searchbar";
+import SearchBar from "./SearchBar";
+import CommentModal from "./CommentModal";
+import { useFloating, offset, flip } from "@floating-ui/react-dom";
+import { SelectedText } from "../types/types";
 
 function View() {
   const { bookId, chapterId } = useParams();
@@ -10,6 +13,29 @@ function View() {
   function handleSearch(value: string) {
     console.log(value);
   }
+
+  const [selectedText, setSelectedText] = useState<SelectedText>({text: "", needsCutoff: false});
+  const [isCommentOpen, setIsCommentOpen] = useState<boolean>(false);
+  const commentRef = useRef<HTMLDivElement>(null);
+
+  const handleTextSelection = (event: React.MouseEvent) => {
+    const selection = window.getSelection();
+    if (selection && selection.toString().trim() !== "") {
+        if (selection.toString().length > 50) {
+          setSelectedText({text: selection.toString(), needsCutoff: true});
+        } else {
+          setSelectedText({text: selection.toString(), needsCutoff: false});
+        }
+    
+      setIsCommentOpen(true);
+      // Positioning logic for the comment modal
+    } else {
+      // check if the click was outside the comment modal
+      if (commentRef.current && !commentRef.current.contains(event.target as Node)) {
+        setIsCommentOpen(false);
+      }
+    }
+  };
 
   document.onmouseup = function (): void {
     const selection: Selection | null = window.getSelection();
@@ -43,13 +69,26 @@ function View() {
   }
 
   return (
-    <div className="w-screen flex flex-col items-center justify-center bg-orange-100">
+    <div
+      className="w-screen flex flex-col items-center justify-center bg-orange-100"
+      onMouseUp={handleTextSelection}
+    >
       <ViewBar />
+      {isCommentOpen && (
+        <CommentModal
+          ref={commentRef}
+          selectedText={selectedText}
+          onClose={function (): void {
+            setIsCommentOpen(false);
+          }}
+        />
+      )}
+
       {/* <h1 className="text-4xl font-bold fixed top-0 w-screen bg-inherit text-center">View: {id}</h1> */}
-      <div className="text-2xl text-center fixed top-20 w-screen py-4 bg-inherit">
+      <div className="text-2xl font-bold text-center fixed top-20 w-screen py-4 bg-inherit">
         {bookId && (getContent(bookId)["Title"] as string)}
       </div>
-      <div className="text-lg md:text-xl text-black font-merriweather text-left xl:px-64 px-10 mx-auto  pt-56 pb-20">
+      <div className="text-lg md:text-xl text-black font-merriweather text-left xl:pr-[40rem] px-10 mx-auto  pt-56 pb-20">
         {bookId && (
           <div>
             {

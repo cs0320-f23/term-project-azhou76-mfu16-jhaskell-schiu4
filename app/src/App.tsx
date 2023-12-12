@@ -1,6 +1,6 @@
 import React from "react";
-import NavBar from "./components/Navbar";
-import SearchBar from "./components/Searchbar";
+import NavBar from "./components/NavBar";
+import SearchBar from "./components/SearchBar";
 import Book from "./components/Book";
 const books = [
   {
@@ -67,14 +67,6 @@ const books = [
 
 
 
-window.addEventListener("keydown", function (e) {
-  if (e.keyCode === 114 || e.keyCode === 70) {
-    e.preventDefault();
-    console.log(document.getElementById("search"));
-    document.getElementById("search")!.focus();
-  }
-});
-
 function App() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [genre, setGenre] = React.useState("all");
@@ -91,10 +83,10 @@ function App() {
     });
 
   return (
-    <div className="flex flex-col h-screen justify-between bg-orange-50">
-      <NavBar onChange={setGenre} setFavorites={setFavorites} />
+    <div className="flex flex-col h-screen justify-between bg-orange-100">
+      <NavBar onChange={setGenre} setFavorites={setFavorites} genre={genre} favorites={favorites} setGenre={setGenre} />
 
-      <div className="flex-grow">
+      <div className="flex-grow my-8">
         {/* Main content */}
         <div className="grid grid-cols-4 w-screen h-screen overflow-y-auto">
           {filteredBooks.map((book) => {
