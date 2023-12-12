@@ -78,7 +78,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
         position: strategy,
         top: "50%",
         transform: "translateY(-50%)",
-        right: 50,
+        left: 50,
         zIndex: 1000,
       }}
       ref={ref}

@@ -12,6 +12,33 @@ const books = [
     favorited: true,
     description:
       "Bilbo Baggins, a hobbit, is smoking in his porchway one day when Gandalf the Wizard visits him. He wants Bilbo to help a group of dwarves take back the Mountain from Smaug, a dragon. Bilbo is unsure he wants to help, but he is drawn in by Gandalf and the dwarves and embarks on the journey of a lifetime.",
+    comments: {
+      chapter1: [
+        {
+          startIndex: 20,
+          endIndex: 50,
+          content: "This is the first comment on chapter 1",
+        },
+        {
+          startIndex: 60,
+          endIndex: 80,
+          content: "This is the second comment on chapter 1",
+        },
+      ],
+      chapter2: [
+        {
+          startIndex: 20,
+          endIndex: 50,
+          content: "This is the first comment on chapter 2",
+        },
+        {
+          startIndex: 60,
+          endIndex: 80,
+          content: "This is the second comment on chapter 2",
+        },
+      ],
+      chapters: [],
+    },
   },
   {
     id: 2,
@@ -65,17 +92,17 @@ const books = [
   },
 ];
 
-
-
 function App() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [genre, setGenre] = React.useState("all");
   const [favorites, setFavorites] = React.useState(false);
-  
-  const filteredBooks = books.filter(book => !favorites || book.favorited).filter((book) =>
+
+  const filteredBooks = books
+    .filter(book => !favorites || book.favorited)
+    .filter(book =>
       book.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .filter((book) => {
+    .filter(book => {
       if (genre.toLowerCase() === "all") {
         return true;
       }
@@ -84,12 +111,18 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen justify-between bg-orange-100">
-      <NavBar onChange={setGenre} setFavorites={setFavorites} genre={genre} favorites={favorites} setGenre={setGenre} />
+      <NavBar
+        onChange={setGenre}
+        setFavorites={setFavorites}
+        genre={genre}
+        favorites={favorites}
+        setGenre={setGenre}
+      />
 
       <div className="flex-grow my-8">
         {/* Main content */}
         <div className="grid grid-cols-4 w-screen h-screen overflow-y-auto">
-          {filteredBooks.map((book) => {
+          {filteredBooks.map(book => {
             return (
               <Book
                 id={book.id}
