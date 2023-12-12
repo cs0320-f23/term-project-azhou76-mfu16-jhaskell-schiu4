@@ -85,7 +85,7 @@ function View() {
       )}
 
       {/* <h1 className="text-4xl font-bold fixed top-0 w-screen bg-inherit text-center">View: {id}</h1> */}
-      <div className="text-2xl text-center fixed top-20 w-screen py-4 bg-inherit">
+      <div className="text-2xl font-bold text-center fixed top-20 w-screen py-4 bg-inherit">
         {bookId && (getContent(bookId)["Title"] as string)}
       </div>
       <div className="text-lg md:text-xl text-black font-merriweather text-left xl:pr-[40rem] px-10 mx-auto  pt-56 pb-20">
