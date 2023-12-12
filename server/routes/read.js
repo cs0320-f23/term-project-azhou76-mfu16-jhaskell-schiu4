@@ -19,14 +19,14 @@ const client = new MongoClient(url, {
 
 recordRoutes.get("/getbook", async (req, res) => {
   let db = client.db(dbName);
-  //   const {title, chapter} = req.query;
+  //   const {bookId, chapter} = req.params;
   try {
     var records = await db
       .collection("books")
-      .find({ title: "Sample Book" }) // replace "Sample Book" with title
+      .find({ bookID: "2" }) // replace "0" with bookId
       .toArray();
     if (records.length > 0) {
-      return res.json(records[0].text.chapter1); // replace chapter1 with chapter
+      return res.json([records[0].text.chapter1, records[0].comments.chapter1]); // replace chapter1 with chapter
     } else {
       res.status(401).json({ message: "Nonexistent book/author" });
     }
@@ -90,7 +90,10 @@ function KMPSearch(pat, txt) {
       i++;
     }
     if (j == M) {
-      matches.push(i - j); //"Found pattern " + "at index " + (i - j) + "\n");
+      matches.push([
+        i - j,
+        txt.substring(i - j, Math.min(txt.length, i - j + pat.length + 20)),
+      ]); //"Found pattern " + "at index " + (i - j) + "\n");
       j = lps[j - 1];
     }
 
@@ -109,29 +112,28 @@ function KMPSearch(pat, txt) {
 // var pat = "ABABCABAB";
 // KMPSearch(pat, txt);
 
+// comments field, each chapter maps to a list of maps that have start, end indices, "content" comment fields
+
+// array of arrays, each sub array has chapter number and then text
 recordRoutes.get("/searchbook", async (req, res) => {
   let db = client.db(dbName);
-  //   const {title, pat} = req.query;
+  //   const {bookId, pat} = req.query;
   try {
     var records = await db
       .collection("books")
-      .find({ title: "A CASE OF IDENTITY" }) // replace "Sample Book" with title
+      .find({ bookID: "2" }) // replace "2" with bookId
       .toArray();
     console.log("hi");
     if (records.length > 0) {
       console.log("hi2");
       let matches = {};
-      console.log(records[0].numchapters);
-      if (records[0].numchapters !== "overall") {
-        for (let i = 0; i < parseInt(records[0].numchapters); i++) {
-          console.log("books are slay");
-          matches[i + 1] = KMPSearch(
-            "side",
-            records[0].text["chapter" + (i + 1).toString()]
-          ); // change "text" to pat
-        }
-      } else {
-        matches["overall"] = KMPSearch("side", records[0].text["overall"]); // change "text" to pat
+      console.log(records[0].numChapters);
+      for (let i = 0; i < parseInt(records[0].numChapters); i++) {
+        console.log("books are slay");
+        matches[i + 1] = KMPSearch(
+          "seldom",
+          records[0].text["chapter" + (i + 1).toString()]
+        ); // change "text" to pat
       }
 
       //   console.log(matches);
@@ -141,6 +143,44 @@ recordRoutes.get("/searchbook", async (req, res) => {
     }
   } catch (e) {
     console.log("An error occurred pulling the book. " + e);
+  }
+});
+
+// TO TEST, in another terminal run: curl -X PUT http://localhost:8000/addcomment
+recordRoutes.put("/addcomment", async (req, res) => {
+  //   const { id } = req.params; //IGNORE
+  //   const newData = req.body; //IGNORE
+  let db = client.db(dbName);
+  //   const {bookId, chapter, startIndex, endIndex, comment} = req.query; // uncomment when integrating
+  const bookId = "2";
+  const chapter = "chapter2";
+  const startIndex = "20";
+  const endIndex = "50";
+  const comment = "This is the added comment";
+
+  try {
+    const collection = db.collection("books");
+    const updateKey = "comments." + chapter;
+    const result = await collection.updateOne(
+      { bookID: bookId },
+      {
+        $push: {
+          [updateKey]: {
+            startIndex: parseInt(startIndex),
+            endIndex: parseInt(endIndex),
+            content: comment,
+          },
+        },
+      }
+    );
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+
+    return res.json({ message: "Document updated successfully" });
+  } catch (error) {
+    console.error("Error updating document:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
