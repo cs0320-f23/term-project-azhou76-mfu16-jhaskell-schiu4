@@ -6,6 +6,14 @@ const express = require("express");
 const recordRoutes = express(); //.Router();
 const port = 8000;
 
+// Enable CORS
+recordRoutes.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
 // This will help us connect to the database
 const MongoClient = require("mongodb").MongoClient;
 
@@ -26,6 +34,10 @@ recordRoutes.get("/getbook", async (req, res) => {
       .find({ bookID: "2" }) // replace "0" with bookId
       .toArray();
     if (records.length > 0) {
+      console.log(records[0]);
+      // get all high level keys/values, but only get chapter1 from comments and text fields
+      const { comments, text, ...rest } = records[0];
+      return res.json({ ...rest, comments: comments.chapter1, text: text.chapter1 }); // replace chapter1 with chapter
       return res.json([records[0].text.chapter1, records[0].comments.chapter1]); // replace chapter1 with chapter
     } else {
       res.status(401).json({ message: "Nonexistent book/author" });

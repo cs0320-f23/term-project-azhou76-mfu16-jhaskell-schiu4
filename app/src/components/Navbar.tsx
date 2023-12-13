@@ -16,7 +16,7 @@ function NavBar({
   console.log(favorites);
 
   return (
-    <ul className="h-14 w-full items-center justify-center bg-white flex gap-4 p-6 font-semibold text-blue-500 [& *]:transition-all [& *]:duration-450 fixed top-0">
+    <ul className="h-14 w-full items-center justify-center bg-white flex gap-4 p-6 font-semibold text-blue-500 [&_*]:transition-all [&_*]:duration-450 fixed top-0">
       <li>
         <div
           className={`hover:cursor-pointer hover:text-purple-400 transition-all duration-150  ${

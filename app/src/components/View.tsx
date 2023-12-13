@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import NavBar from "./NavBar";
 import ViewBar from "./ViewBar";
@@ -20,6 +20,30 @@ function View() {
   });
   const [isCommentOpen, setIsCommentOpen] = useState<boolean>(false);
   const commentRef = useRef<HTMLDivElement>(null);
+  // make sure title, author, and content are all strings and keys
+  type Comment = {
+    startIndex: number;
+    endIndex: number;
+    content: string;
+  }
+  type ChapterJson = {
+    author: string;
+    bookID: string;
+    comments:  Record<string, Comment>;
+    genre: string;
+    numChapters: string,
+    text: string;
+    title: string;
+  }
+  const [chapterJson, setChapterJson] = useState<ChapterJson>({
+    author: "",
+    bookID: "",
+    comments: {},
+    genre: "",
+    numChapters: "",
+    text: "",
+    title: "",
+  });
 
   const handleTextSelection = (event: React.MouseEvent) => {
     const selection = window.getSelection();
@@ -60,8 +84,13 @@ function View() {
     }
   };
 
-  function getContent(id: string): Record<string, unknown> {
-    return {
+  async function getContent(id: string): Promise<ChapterJson> {
+    const res = await fetch(`http://localhost:8000/getbook/`);
+    const data = await res.json();
+    setChapterJson(data);
+    console.log(data);
+    return data;
+    const mock = {
       Title: "Lord of the Rings",
       comments: {
         chapter1: [
@@ -99,7 +128,7 @@ function View() {
     };
   }
   function getChapterComments(bookId: string, chapterId: string) {
-    const bookContent = getContent(bookId);
+    const bookContent = chapterJson;
     const comments = bookContent.comments as Record<string, any>;
     return comments[chapterId] || [];
   }
@@ -116,10 +145,15 @@ function View() {
   }
 
   function getChapterText(bookId: string, chapterId: string): string {
-    const bookContent = getContent(bookId);
-    const chapters = bookContent.Chapters as { [key: string]: string };
-    return chapters[chapterId] || "";
+    const bookContent = chapterJson;
+    const chapter = bookContent.text;
+    return chapter;
   }
+
+  useLayoutEffect(() => {
+    getContent(bookId!);
+
+  }, [bookId])
 
   return (
     <div
@@ -138,21 +172,13 @@ function View() {
       )}
 
       {/* <h1 className="text-4xl font-bold fixed top-0 w-screen bg-inherit text-center">View: {id}</h1> */}
-      <div className="text-2xl font-bold text-center fixed top-20 w-screen py-4 bg-inherit">
-        {bookId && (getContent(bookId)["Title"] as string)}
+      <div className="text-2xl font-bold text-center fixed top-14 w-screen py-4 bg-inherit">
+        {chapterJson["title"]}
       </div>
       <div className="flex flex-row">
         {/* Book */}
         <div className="text-lg md:text-xl text-black font-merriweather text-left px-10 mx-auto  pt-56 pb-20 flex-grow">
-          {bookId && (
-            <div id="book-content">
-              {
-                (getContent(bookId)["Chapters"] as { [key: string]: string })[
-                  "Chapter 1"
-                ]
-              }
-            </div>
-          )}
+          {bookId && <div id="book-content">{chapterJson["text"]}</div>}
         </div>
         {/* Comments */}
         <div className="flex flex-col gap-4 text-black font-merriweather text-left px-10 mx-auto  pt-56 pb-20">

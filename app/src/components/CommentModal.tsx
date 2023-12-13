@@ -90,7 +90,6 @@ const CommentModal: React.FC<CommentModalProps> = ({
         onBlur={handleBlur}
         className="flex flex-col transition-all duration-150 bg-white shadow-md rounded-md p-4 w-96"
       >
-        {/* TODO: create close button for comment modal */}
         <button
           className="absolute top-2 right-4 hover:cursor-pointer text-red-700"
           onClick={onClose}
