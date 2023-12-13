@@ -27,18 +27,25 @@ const client = new MongoClient(url, {
 
 recordRoutes.get("/getbook", async (req, res) => {
   let db = client.db(dbName);
-  //   const {bookId, chapter} = req.params;
+  const { bookId, chapter } = req.query;
   try {
     var records = await db
       .collection("books")
-      .find({ bookID: "2" }) // replace "0" with bookId
+      .find({ bookID: bookId }) // replace "0" with bookId
       .toArray();
     if (records.length > 0) {
-      console.log(records[0]);
       // get all high level keys/values, but only get chapter1 from comments and text fields
       const { comments, text, ...rest } = records[0];
-      return res.json({ ...rest, comments: comments.chapter1, text: text.chapter1 }); // replace chapter1 with chapter
-      return res.json([records[0].text.chapter1, records[0].comments.chapter1]); // replace chapter1 with chapter
+      if (!comments[chapter] || !text[chapter]) {
+        return res.status(401).json({ message: "Chapter not found" });
+      }
+
+      return res.json({
+        ...rest,
+        comments: comments[chapter],
+        text: text[chapter],
+      }); // replace chapter1 with chapter
+      // return res.json([records[0].text.chapter, records[0].comments.chapter]); // replace chapter1 with chapter
     } else {
       res.status(401).json({ message: "Nonexistent book/author" });
     }
@@ -163,12 +170,12 @@ recordRoutes.put("/addcomment", async (req, res) => {
   //   const { id } = req.params; //IGNORE
   //   const newData = req.body; //IGNORE
   let db = client.db(dbName);
-  //   const {bookId, chapter, startIndex, endIndex, comment} = req.query; // uncomment when integrating
-  const bookId = "2";
-  const chapter = "chapter2";
-  const startIndex = "20";
-  const endIndex = "50";
-  const comment = "This is the added comment";
+  const { bookId, chapter, startIndex, endIndex, comment } = req.query; // uncomment when integrating
+  // const bookId = "2";
+  // const chapter = "chapter2";
+  // const startIndex = "20";
+  // const endIndex = "50";
+  // const comment = "This is the added comment";
 
   try {
     const collection = db.collection("books");
