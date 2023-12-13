@@ -25,16 +25,16 @@ function View() {
     startIndex: number;
     endIndex: number;
     content: string;
-  }
+  };
   type ChapterJson = {
     author: string;
     bookID: string;
-    comments:  Record<string, Comment>;
+    comments: Record<string, Comment>;
     genre: string;
-    numChapters: string,
+    numChapters: string;
     text: string;
     title: string;
-  }
+  };
   const [chapterJson, setChapterJson] = useState<ChapterJson>({
     author: "",
     bookID: "",
@@ -85,7 +85,10 @@ function View() {
   };
 
   async function getContent(id: string): Promise<ChapterJson> {
-    const res = await fetch(`http://localhost:8000/getbook/`);
+    const res = await fetch(
+      `http://localhost:8000/getbook/?bookId=${id}&chapter=chapter${chapterId}`
+    );
+    // http://localhost:8000/getbook/?bookId=1&chapter=chapter1
     const data = await res.json();
     setChapterJson(data);
     console.log(data);
@@ -152,8 +155,7 @@ function View() {
 
   useLayoutEffect(() => {
     getContent(bookId!);
-
-  }, [bookId])
+  }, [bookId]);
 
   return (
     <div
