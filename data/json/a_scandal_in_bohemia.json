@@ -2,7 +2,8 @@
   "title": "A SCANDAL IN BOHEMIA",
   "author": "Arthur Conan Doyle",
   "genre": "Fiction",
-  "link": "data/image/a_scandal_in_bohemia.jpeg",
+  "link": "a_scandal_in_bohemia.jpeg",
+  "favorited": true,
   "bookID": "2",
   "numChapters": "3",
   "comments": {
