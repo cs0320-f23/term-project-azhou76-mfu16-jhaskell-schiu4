@@ -98,11 +98,11 @@ function App() {
   const [favorites, setFavorites] = React.useState(false);
 
   const filteredBooks = books
-    .filter(book => !favorites || book.favorited)
-    .filter(book =>
+    .filter((book) => !favorites || book.favorited)
+    .filter((book) =>
       book.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .filter(book => {
+    .filter((book) => {
       if (genre.toLowerCase() === "all") {
         return true;
       }
@@ -122,7 +122,7 @@ function App() {
       <div className="flex-grow my-8">
         {/* Main content */}
         <div className="grid grid-cols-4 w-screen h-screen overflow-y-auto">
-          {filteredBooks.map(book => {
+          {filteredBooks.map((book) => {
             return (
               <Book
                 id={book.id}
