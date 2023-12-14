@@ -54,7 +54,7 @@ recordRoutes.get("/getbook", async (req, res) => {
   }
 });
 
-//Javascript program for implementation of KMP pattern
+// Javascript program for implementation of KMP pattern
 // searching algorithm
 
 function computeLPSArray(pat, M, lps) {
@@ -134,23 +134,24 @@ function KMPSearch(pat, txt) {
 // comments field, each chapter maps to a list of maps that have start, end indices, "content" comment fields
 
 // array of arrays, each sub array has chapter number and then text
+// to test, sample search is http://localhost:8000/searchbook?bookId=2&pat=seldom
 recordRoutes.get("/searchbook", async (req, res) => {
   let db = client.db(dbName);
-  //   const {bookId, pat} = req.query;
+  const {bookId, pat} = req.query;
+  if (!bookId || !pat) {
+    return res.status(400).json({ message: "Both bookId and pat are required" });
+  }
   try {
     var records = await db
       .collection("books")
-      .find({ bookID: "2" }) // replace "2" with bookId
+      .find({ bookID: bookId }) // replace "2" with bookId
       .toArray();
-    console.log("hi");
     if (records.length > 0) {
-      console.log("hi2");
       let matches = {};
       console.log(records[0].numChapters);
       for (let i = 0; i < parseInt(records[0].numChapters); i++) {
-        console.log("books are slay");
         matches[i + 1] = KMPSearch(
-          "seldom",
+          pat,
           records[0].text["chapter" + (i + 1).toString()]
         ); // change "text" to pat
       }
