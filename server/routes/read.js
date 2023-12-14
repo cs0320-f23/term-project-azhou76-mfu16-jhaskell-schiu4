@@ -140,9 +140,11 @@ function KMPSearch(pat, txt) {
 // to test, sample search is http://localhost:8000/searchbook?bookId=2&pat=seldom
 recordRoutes.get("/searchbook", async (req, res) => {
   let db = client.db(dbName);
-  const {bookId, pat} = req.query;
+  const { bookId, pat } = req.query;
   if (!bookId || !pat) {
-    return res.status(400).json({ message: "Both bookId and pat are required" });
+    return res
+      .status(400)
+      .json({ message: "Both bookId and pat are required" });
   }
   try {
     var records = await db
@@ -249,7 +251,6 @@ genres={book.genres}
 // gets metadata of all current books
 recordRoutes.get("/api/getbooks", async (req, res) => {
   let db = client.db(dbName);
-
   try {
     var records = await db
       .collection("books")
@@ -265,6 +266,27 @@ recordRoutes.get("/api/getbooks", async (req, res) => {
       status: "error",
       message: err.message,
     });
+  }
+});
+
+recordRoutes.put("/api/updatefavorited", async (req, res) => {
+  try {
+    const { bookID, newFavoriteStatus } = req.body; // assuming you're passing an 'id' and 'newFavoriteStatus'
+    // console.log(bookID, newFavoriteStatus);
+    let db = client.db(dbName);
+
+    const result = await db.collection("books").updateOne(
+      { bookID: bookID },
+      { $set: { favorited: newFavoriteStatus } } // The update operation
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).send("No document matches the provided query.");
+    }
+
+    res.status(200).send("Document updated successfully.");
+  } catch (error) {
+    res.status(500).send("Error updating document: " + error.message);
   }
 });
 

@@ -163,6 +163,7 @@ function App() {
                 imgPath={book.imgPath}
                 title={book.title}
                 genres={book.genres}
+                isFavorited={book.favorited}
                 // description={book.description}
               />
             );

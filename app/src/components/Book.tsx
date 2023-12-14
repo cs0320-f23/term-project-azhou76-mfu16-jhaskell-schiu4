@@ -7,7 +7,9 @@ interface BookProps {
   author: string;
   description?: string;
   genres?: string[];
+  isFavorited: boolean;
 }
+
 // add id
 function Book({
   id,
@@ -16,8 +18,32 @@ function Book({
   author,
   description = "Description",
   genres = ["fantasy, fiction, romance"],
+  isFavorited,
 }: BookProps) {
-  const [favorited, setFavorited] = useState(false);
+  const [favorited, setFavorited] = useState(isFavorited);
+
+  async function setFavoritedHandler() {
+    try {
+      console.log(favorited, id);
+      const response = await fetch(
+        `http://localhost:8000/api/updatefavorited`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            bookID: id + "",
+            newFavoriteStatus: !favorited,
+          }),
+        }
+      );
+      setFavorited(!favorited);
+      console.log(response);
+    } catch {
+      console.log("Error updating favorite status");
+    }
+  }
 
   return (
     <div className="card rounded-md bg-white w-80 p-4 flex-shrink-0 flex flex-col hover:shadow-2xl my-12 transition-all cursor-pointer shadow-sm hover:cursor-pointer">
@@ -36,7 +62,7 @@ function Book({
       <hr className="my-4" />
       <div
         className="favorites flex flex-row gap-2"
-        onClick={() => setFavorited(!favorited)}
+        onClick={() => setFavoritedHandler()}
       >
         {!favorited && (
           <>
