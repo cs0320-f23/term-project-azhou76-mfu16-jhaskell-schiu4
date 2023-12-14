@@ -5,6 +5,9 @@ const express = require("express");
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const recordRoutes = express(); //.Router();
 const port = 8000;
+const bodyParser = require("body-parser");
+recordRoutes.use(bodyParser.json()); // for parsing application/json
+recordRoutes.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // Enable CORS
 recordRoutes.use((req, res, next) => {
@@ -202,6 +205,66 @@ recordRoutes.put("/addcomment", async (req, res) => {
   } catch (error) {
     console.error("Error updating document:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+recordRoutes.put("/api/addbook", async (req, res) => {
+  const bookData = req.body;
+  // console.log(bookData);
+
+  try {
+    await client.connect();
+    console.log("Connected correctly to server");
+
+    const db = client.db(dbName);
+    const col = db.collection("books");
+
+    // Insert a single document
+    const result = await col.updateOne(
+      { bookID: bookData.bookID },
+      { $set: bookData },
+      { upsert: true }
+    );
+
+    res.status(200).send({ message: "Book updated", result: result });
+  } catch (err) {
+    console.log(err.stack);
+    res
+      .status(500)
+      .send({ message: "Error connecting to the database", error: err });
+  }
+
+  // Close the connection
+  client.close();
+});
+
+/*
+id={book.id}
+key={book.id}
+author={book.author}
+imgPath={book.imgPath}
+title={book.title}
+genres={book.genres}
+*/
+// gets metadata of all current books
+recordRoutes.get("/api/getbooks", async (req, res) => {
+  let db = client.db(dbName);
+
+  try {
+    var records = await db
+      .collection("books")
+      .find({}, { projection: { text: 0, comments: 0 } })
+      .toArray();
+    res.status(200).json({
+      status: "success",
+      data: records,
+    });
+  } catch (err) {
+    console.error("Error occurred while getting books:", err);
+    res.status(500).json({
+      status: "error",
+      message: err.message,
+    });
   }
 });
 

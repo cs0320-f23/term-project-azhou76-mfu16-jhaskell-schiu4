@@ -6,8 +6,13 @@ import SearchBar from "./SearchBar";
 import CommentModal from "./CommentModal";
 import { useFloating, offset, flip } from "@floating-ui/react-dom";
 import { SelectedText } from "../types/types";
+import AccessibilityBar from "./AccessibilityBar";
 
 function View() {
+  const [size, setSize] = useState<number>(2);
+  const textSizes = ["sm", "base", "lg", "2xl", "3xl"];
+  const titleSizes = ["base", "lg", "2xl", "3xl", "4xl"];
+
   const { bookId, chapterId } = useParams();
   console.log(bookId, chapterId);
   function handleSearch(value: string) {
@@ -173,13 +178,21 @@ function View() {
         />
       )}
 
-      {/* <h1 className="text-4xl font-bold fixed top-0 w-screen bg-inherit text-center">View: {id}</h1> */}
-      <div className="text-2xl font-bold text-center fixed top-14 w-screen py-4 bg-inherit">
+      <div
+        className={`text-${titleSizes[size]} font-bold text-center fixed top-14 w-screen py-4 bg-inherit`}
+      >
         {chapterJson["title"]}
       </div>
+
+      <div className="flex w-full justify-end text-black font-merriweather px-40 pt-40 pb-10">
+        <AccessibilityBar size={size} setSize={setSize} />
+      </div>
+
       <div className="flex flex-row">
         {/* Book */}
-        <div className="text-lg md:text-xl text-black font-merriweather text-left px-10 mx-auto  pt-56 pb-20 flex-grow">
+        <div
+          className={`text-${textSizes[size]} text-black font-merriweather text-left px-10 mx-auto pb-20 flex-grow`}
+        >
           {bookId && <div id="book-content">{chapterJson["text"]}</div>}
         </div>
         {/* Comments */}
