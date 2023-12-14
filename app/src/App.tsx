@@ -127,7 +127,7 @@ function App() {
     getBooks().then((fetchedBooks) => {
       setBooks(fetchedBooks);
     });
-  }, []);
+  }, [books]);
 
   const filteredBooks = books
     .filter((book: any) => !favorites || book.favorited)

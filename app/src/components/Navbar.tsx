@@ -13,8 +13,6 @@ function NavBar({
   favorites,
   setGenre,
 }: NavBarProps) {
-  console.log(favorites);
-
   return (
     <ul className="h-14 w-full items-center justify-center bg-white flex gap-4 p-6 font-semibold text-blue-500 [&_*]:transition-all [&_*]:duration-450 fixed top-0">
       <li>
@@ -22,7 +20,7 @@ function NavBar({
           className={`hover:cursor-pointer hover:text-purple-400 transition-all duration-150  ${
             favorites ? "text-purple-600" : ""
           }`}
-          onClick={e => {
+          onClick={(e) => {
             setGenre("all");
             setFavorites(true);
           }}
@@ -35,7 +33,7 @@ function NavBar({
           className={`hover:cursor-pointer hover:text-purple-400 transition-all duration-150 ${
             genre === "all" && !favorites ? "text-purple-600" : ""
           }`}
-          onClick={e => {
+          onClick={(e) => {
             onChange("all");
             setFavorites(false);
           }}
@@ -48,7 +46,7 @@ function NavBar({
           className={`hover:cursor-pointer hover:text-purple-400 transition-all duration-150 ${
             genre === "fiction" ? "text-purple-600" : ""
           }`}
-          onClick={e => {
+          onClick={(e) => {
             onChange("fiction");
             setFavorites(false);
           }}
@@ -61,7 +59,7 @@ function NavBar({
           className={`hover:cursor-pointer hover:text-purple-400 transition-all duration-150 ${
             genre === "nonfiction" ? "text-purple-600" : ""
           }`}
-          onClick={e => {
+          onClick={(e) => {
             onChange("nonfiction");
             setFavorites(false);
           }}
