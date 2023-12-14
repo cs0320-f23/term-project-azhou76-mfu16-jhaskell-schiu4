@@ -29,7 +29,7 @@ function View() {
   type ChapterJson = {
     author: string;
     bookID: string;
-    comments:  Record<string, Comment>;
+    comments:  Comment[];
     genre: string;
     numChapters: string,
     text: string;
@@ -38,7 +38,7 @@ function View() {
   const [chapterJson, setChapterJson] = useState<ChapterJson>({
     author: "",
     bookID: "",
-    comments: {},
+    comments: [],
     genre: "",
     numChapters: "",
     text: "",
@@ -129,8 +129,9 @@ function View() {
   }
   function getChapterComments(bookId: string, chapterId: string) {
     const bookContent = chapterJson;
-    const comments = bookContent.comments as Record<string, any>;
-    return comments[chapterId] || [];
+
+    const comments = bookContent.comments as Comment[];
+    return comments;
   }
 
   function extractCommentText(
@@ -139,8 +140,11 @@ function View() {
     endIndex: number
   ): string {
     if (startIndex >= 0 && endIndex <= bookText.length) {
+      console.log("hi", bookText.slice(startIndex, endIndex));
       return bookText.slice(startIndex, endIndex);
     }
+      console.log("hi");
+
     return "";
   }
 
@@ -183,12 +187,13 @@ function View() {
         {/* Comments */}
         <div className="flex flex-col gap-4 text-black font-merriweather text-left px-10 mx-auto  pt-56 pb-20">
           {getChapterComments(bookId!, "chapter1").map(
-            (comment: Record<string, any>, index: number) => {
-              const commentText = extractCommentText(
-                getChapterText(bookId!, "Chapter 1"),
-                comment.startIndex,
-                comment.endIndex
-              );
+            (comment: Comment, index: number) => {
+              // const commentText = extractCommentText(
+              //   getChapterText(bookId!, "Chapter 1"),
+              //   comment.startIndex,
+              //   comment.endIndex
+              // );
+              const commentText = comment.content;
 
               return (
                 <div

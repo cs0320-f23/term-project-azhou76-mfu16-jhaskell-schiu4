@@ -23,24 +23,30 @@ const CommentModal: React.FC<CommentModalProps> = ({
     middleware: [offset(10)],
   });
 
-    const handleFocus = () => {
-      setIsFocused(true);
-    };
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
 
-    const handleBlur = () => {
-      setIsFocused(false);
-      if (!comment) {
-        onClose(); // Close the modal if there is no comment
-      }
-    };
+  const handleBlur = () => {
+    setIsFocused(false);
+    if (!comment) {
+      onClose(); // Close the modal if there is no comment
+    }
+  };
 
   useEffect(() => {
     update();
   }, [selectedText, update]);
 
+  function sendComment(comment: string) {
+    fetch(`http://localhost:8000/sendcomment/content=${comment}`, {});
+    // TODO: finish this method for sending comments to database
+  }
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log("Comment:", comment); // Handle the comment submission here
+    sendComment(comment);
     onClose(); // Close the modal
   };
 
@@ -93,8 +99,15 @@ const CommentModal: React.FC<CommentModalProps> = ({
         <button
           className="absolute top-2 right-4 hover:cursor-pointer text-red-700"
           onClick={onClose}
-        >X</button>
-        <p>Selected Text: {selectedText.needsCutoff ? selectedText.text.substring(0, 50) + "..." : selectedText.text}</p>
+        >
+          X
+        </button>
+        <p>
+          Selected Text:{" "}
+          {selectedText.needsCutoff
+            ? selectedText.text.substring(0, 50) + "..."
+            : selectedText.text}
+        </p>
         <form onSubmit={handleSubmit} className="flex flex-col w-15">
           <textarea
             value={comment}
