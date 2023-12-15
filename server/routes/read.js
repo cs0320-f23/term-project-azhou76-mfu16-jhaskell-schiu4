@@ -31,10 +31,10 @@ const client = new MongoClient(url, {
 recordRoutes.get("/getbook", async (req, res) => {
   let db = client.db(dbName);
   const { bookId, chapter } = req.query;
-  if (!bookId || !pat) {
+  if (!bookId || !chapter) {
     return res
       .status(400)
-      .json({ message: "Both bookId and pat are required" });
+      .json({ message: "Both bookId and chapter are required" });
   }
   try {
     var records = await db
@@ -299,4 +299,4 @@ recordRoutes.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
-module.exports = { recordRoutes };
+module.exports = { recordRoutes, client };
