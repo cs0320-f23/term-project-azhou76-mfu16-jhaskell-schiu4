@@ -100,4 +100,36 @@ describe('read.js route tests', () => {
         .get('/wrongendpoint')
         .expect(404);
     });
+
+    it('addcomment should return a success message', async () => {
+        const req = {
+            bookId: "2",
+            chapter: "chapter3",
+            startIndex: "20",
+            endIndex: "21",
+            comment: "test comment"
+        }
+        const response = await supertest(testApp)
+            .put('/addcomment')
+            .set('content-type', 'application/json')
+            .send(JSON.stringify(req));
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.equal('Document updated successfully.');
+    });
+
+    it('addcomment should return a success message', async () => {
+        const req = {
+            bookId: "100",
+            chapter: "chapter3",
+            startIndex: "20",
+            endIndex: "21",
+            comment: "test comment"
+        }
+        const response = await supertest(testApp)
+            .put('/addcomment')
+            .set('content-type', 'application/json')
+            .send(JSON.stringify(req));
+        expect(response.status).to.equal(404);
+        expect(response.body.message).to.equal('Document not found.');
+    });
 });
