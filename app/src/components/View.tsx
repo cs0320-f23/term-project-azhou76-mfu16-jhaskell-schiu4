@@ -85,9 +85,16 @@ function View() {
       if (start > end) {
         [start, end] = [end, start];
       }
-      setComment((currentComment) => ({content: currentComment?.content, startIndex: start, endIndex: end}))
-      console.log("Start index: " + start);
-      console.log("End index: " + end);
+      if(selection.anchorNode?.parentElement?.id === "book-content") {
+          setComment(currentComment => ({
+            content: currentComment?.content,
+            startIndex: start,
+            endIndex: end,
+          }));
+          console.log("Start index: " + start);
+          console.log("End index: " + end);
+      }
+    
     }
   };
 
