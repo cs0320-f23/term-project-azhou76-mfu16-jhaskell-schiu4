@@ -6,13 +6,14 @@ import SearchBar from "./SearchBar";
 import CommentModal from "./CommentModal";
 import { useFloating, offset, flip } from "@floating-ui/react-dom";
 import { SelectedText } from "../types/types";
-import { Comment } from "./types/types";
 import AccessibilityBar from "./AccessibilityBar";
+import { ChapterJson, Comment } from "../types/types";
+
 
 function View() {
   const [size, setSize] = useState<number>(2);
-  const textSizes = ["sm", "base", "lg", "2xl", "3xl"];
-  const titleSizes = ["base", "lg", "2xl", "3xl", "4xl"];
+  const textSizes = ["sm", "base", "lg", "2xl"];
+  const titleSizes = ["base", "lg", "2xl", "2xl"];
 
   const { bookId, chapterId } = useParams();
   console.log(bookId, chapterId);
@@ -28,15 +29,7 @@ function View() {
   const commentRef = useRef<HTMLDivElement>(null);
   // make sure title, author, and content are all strings and keys
   
-  type ChapterJson = {
-    author: string;
-    bookID: string;
-    comments:  Comment[];
-     genre: string;
-    numChapters: string;
-    text: string;
-    title: string;
-      };
+
         
     
   const [chapterJson, setChapterJson] = useState<ChapterJson>({
@@ -195,7 +188,7 @@ function View() {
       </div>
 
       <div className="flex w-full justify-end text-black font-merriweather px-40 pt-40 pb-10">
-        <AccessibilityBar size={size} setSize={setSize} />
+        <AccessibilityBar size={size} setSize={setSize} chapterInfo={chapterJson} />
       </div>
 
       <div className="flex flex-row">
