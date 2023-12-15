@@ -7,7 +7,7 @@ export type ChapterJson = {
   author: string;
   bookID: string;
   comments:  Comment[];
-   genre: string;
+  genre: string;
   numChapters: string;
   text: string;
   title: string;
