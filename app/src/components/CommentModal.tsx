@@ -1,19 +1,26 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useFloating, offset, flip } from "@floating-ui/react-dom";
 import { SelectedText } from "../types/types";
-
+import { Comment } from "./types/types";
 interface CommentModalProps {
   selectedText: SelectedText;
   onClose: () => void;
   ref: React.RefObject<HTMLDivElement>;
+  comment: Comment;
+  chapterId: string;
+  bookId: string;
+  setComment: React.Dispatch<React.SetStateAction<Comment>>;
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({
   selectedText,
   onClose,
   ref,
+  comment,
+  chapterId,
+  bookId,
+  setComment,
 }) => {
-  const [comment, setComment] = useState<string>("");
   const floatingRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -38,9 +45,41 @@ const CommentModal: React.FC<CommentModalProps> = ({
     update();
   }, [selectedText, update]);
 
-  function sendComment(comment: string) {
-    fetch(`http://localhost:8000/sendcomment/content=${comment}`, {});
-    // TODO: finish this method for sending comments to database
+  /**
+   * Function for sending and storing comments in db
+   * @param content
+   * @param startIndex
+   * @param endIndex
+   */
+  async function sendComment({ content, startIndex, endIndex }: Comment) {
+    // log all params
+    console.log("Content:", content);
+    console.log("Start Index:", startIndex);
+    console.log("End Index:", endIndex);
+    console.log("Chapter ID:", chapterId);
+    console.log("Book ID:", bookId);
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        startIndex,
+        endIndex,
+        comment: content,
+        chapter: chapterId,
+        bookId,
+      }),
+    };
+    const res = await fetch(
+      `http://localhost:8000/addcomment?startIndex=${startIndex}&endIndex=${endIndex}&comment=${content}&chapter=${chapterId}&bookId=${bookId}`,
+      requestOptions
+    );
+    // make sure res is valid
+    if (res.ok && res.status === 200) {
+      const json = await res.json();
+      console.log(json);
+    } else {
+      console.log("Error sending comment");
+    }
   }
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -110,8 +149,16 @@ const CommentModal: React.FC<CommentModalProps> = ({
         </p>
         <form onSubmit={handleSubmit} className="flex flex-col w-15">
           <textarea
-            value={comment}
-            onChange={e => setComment(e.target.value)}
+            value={comment.content}
+            onChange={e =>
+              setComment((currentComment: Comment | undefined) => {
+                return {
+                  content: e.target.value,
+                  startIndex: currentComment?.startIndex,
+                  endIndex: currentComment?.endIndex,
+                };
+              })
+            }
             className="focus:outline-none focus:ring-2 focus:border-transparent border border-gray-300 rounded-md p-2 h-40 resize-none"
             placeholder="Enter your comment"
           />

@@ -6,7 +6,7 @@ import SearchBar from "./SearchBar";
 import CommentModal from "./CommentModal";
 import { useFloating, offset, flip } from "@floating-ui/react-dom";
 import { SelectedText } from "../types/types";
-
+import { Comment } from "./types/types";
 function View() {
   const { bookId, chapterId } = useParams();
   console.log(bookId, chapterId);
@@ -21,11 +21,7 @@ function View() {
   const [isCommentOpen, setIsCommentOpen] = useState<boolean>(false);
   const commentRef = useRef<HTMLDivElement>(null);
   // make sure title, author, and content are all strings and keys
-  type Comment = {
-    startIndex: number;
-    endIndex: number;
-    content: string;
-  }
+  
   type ChapterJson = {
     author: string;
     bookID: string;
@@ -67,6 +63,9 @@ function View() {
     }
   };
 
+  const [comment, setComment] = useState<Comment>({content: undefined, startIndex: undefined, endIndex: undefined});
+
+
   document.onmouseup = function (): void {
     const selection: Selection | null = window.getSelection();
 
@@ -78,7 +77,7 @@ function View() {
       if (start > end) {
         [start, end] = [end, start];
       }
-
+      setComment((currentComment) => ({content: currentComment?.content, startIndex: start, endIndex: end}))
       console.log("Start index: " + start);
       console.log("End index: " + end);
     }
@@ -168,6 +167,10 @@ function View() {
       {isCommentOpen && (
         <CommentModal
           ref={commentRef}
+          bookId={bookId!}
+          chapterId={chapterId!}
+          comment={comment}
+          setComment={setComment}
           selectedText={selectedText}
           onClose={function (): void {
             setIsCommentOpen(false);
