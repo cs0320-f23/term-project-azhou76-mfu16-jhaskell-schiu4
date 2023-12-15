@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import Book from "./components/Book";
 import NavBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
-import Book from "./components/Book";
 // const books = [
 //   {
 //     id: 1,
