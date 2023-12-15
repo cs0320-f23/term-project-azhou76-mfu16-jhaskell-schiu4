@@ -62,17 +62,14 @@ const CommentModal: React.FC<CommentModalProps> = ({
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        startIndex,
-        endIndex,
+        startIndex: startIndex + "",
+        endIndex: endIndex + "",
         comment: content,
-        chapter: chapterId,
-        bookId,
+        chapter: "chapter" + chapterId,
+        bookID: bookId + "",
       }),
     };
-    const res = await fetch(
-      `http://localhost:8000/addcomment?startIndex=${startIndex}&endIndex=${endIndex}&comment=${content}&chapter=${chapterId}&bookId=${bookId}`,
-      requestOptions
-    );
+    const res = await fetch(`http://localhost:8000/addcomment`, requestOptions);
     // make sure res is valid
     if (res.ok && res.status === 200) {
       const json = await res.json();
@@ -150,7 +147,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
         <form onSubmit={handleSubmit} className="flex flex-col w-15">
           <textarea
             value={comment.content}
-            onChange={e =>
+            onChange={(e) =>
               setComment((currentComment: Comment | undefined) => {
                 return {
                   content: e.target.value,
