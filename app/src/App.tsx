@@ -121,13 +121,14 @@ function App() {
   const [genre, setGenre] = React.useState("all");
   const [favorites, setFavorites] = React.useState(false);
   const [books, setBooks] = useState([]); // State to store books
+  const [shouldUpdate, setShouldUpdate] = useState(false); // State to trigger update
 
   useEffect(() => {
-    // Fetch books when the component mounts
+    // Fetch books when the component mounts or when a specific condition is met
     getBooks().then((fetchedBooks) => {
-      setBooks(fetchedBooks);
+        setBooks(fetchedBooks);
     });
-  }, [books]);
+  }, [shouldUpdate]); // Dependency array with books  
 
   const filteredBooks = books
     .filter((book: any) => !favorites || book.favorited)
@@ -164,6 +165,8 @@ function App() {
                 title={book.title}
                 genres={book.genres}
                 isFavorited={book.favorited}
+                shouldUpdate={shouldUpdate}
+                setShouldUpdate={setShouldUpdate}
                 // description={book.description}
               />
             );

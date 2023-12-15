@@ -85,9 +85,16 @@ function View() {
       if (start > end) {
         [start, end] = [end, start];
       }
-      setComment((currentComment) => ({content: currentComment?.content, startIndex: start, endIndex: end}))
-      console.log("Start index: " + start);
-      console.log("End index: " + end);
+      if(selection.anchorNode?.parentElement?.id === "book-content") {
+          setComment(currentComment => ({
+            content: currentComment?.content,
+            startIndex: start,
+            endIndex: end,
+          }));
+          console.log("Start index: " + start);
+          console.log("End index: " + end);
+      }
+    
     }
   };
 
@@ -214,7 +221,7 @@ function View() {
               //   comment.startIndex,
               //   comment.endIndex
               // );
-              const commentText = comment.content;
+              const commentText = document.getElementById("book-content")?.textContent?.slice(comment.startIndex, comment.endIndex);
 
               return (
                 <div

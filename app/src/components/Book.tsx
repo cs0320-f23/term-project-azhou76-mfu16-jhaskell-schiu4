@@ -8,6 +8,8 @@ interface BookProps {
   description?: string;
   genres?: string[];
   isFavorited: boolean;
+  shouldUpdate: boolean;
+  setShouldUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // add id
@@ -19,6 +21,8 @@ function Book({
   description = "Description",
   genres = ["fantasy, fiction, romance"],
   isFavorited,
+  shouldUpdate,
+  setShouldUpdate
 }: BookProps) {
   const [favorited, setFavorited] = useState(isFavorited);
 
@@ -39,6 +43,7 @@ function Book({
         }
       );
       setFavorited(!favorited);
+      setShouldUpdate(!shouldUpdate);
       console.log(response);
     } catch {
       console.log("Error updating favorite status");
