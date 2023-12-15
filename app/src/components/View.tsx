@@ -214,7 +214,7 @@ function View() {
               //   comment.startIndex,
               //   comment.endIndex
               // );
-              const commentText = comment.content;
+              const commentText = document.getElementById("book-content")?.textContent?.slice(comment.startIndex, comment.endIndex);
 
               return (
                 <div
