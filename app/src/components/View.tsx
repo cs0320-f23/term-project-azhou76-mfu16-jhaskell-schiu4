@@ -38,11 +38,6 @@ function View() {
     title: string;
       };
         
-  type Comment = {
-    startIndex: number;
-    endIndex: number;
-    content: string;
-  };
     
   const [chapterJson, setChapterJson] = useState<ChapterJson>({
     author: "",
