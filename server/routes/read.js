@@ -5,6 +5,9 @@ const express = require("express");
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const recordRoutes = express(); //.Router();
 const port = 8000;
+const bodyParser = require("body-parser");
+recordRoutes.use(bodyParser.json()); // for parsing application/json
+recordRoutes.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // Enable CORS
 recordRoutes.use((req, res, next) => {
@@ -27,18 +30,30 @@ const client = new MongoClient(url, {
 
 recordRoutes.get("/getbook", async (req, res) => {
   let db = client.db(dbName);
-  //   const {bookId, chapter} = req.params;
+  const { bookId, chapter } = req.query;
+  if (!bookId || !chapter) {
+    return res
+      .status(400)
+      .json({ message: "Both bookId and chapter are required" });
+  }
   try {
     var records = await db
       .collection("books")
-      .find({ bookID: "2" }) // replace "0" with bookId
+      .find({ bookID: bookId }) // replace "0" with bookId
       .toArray();
     if (records.length > 0) {
-      console.log(records[0]);
       // get all high level keys/values, but only get chapter1 from comments and text fields
       const { comments, text, ...rest } = records[0];
-      return res.json({ ...rest, comments: comments.chapter1, text: text.chapter1 }); // replace chapter1 with chapter
-      return res.json([records[0].text.chapter1, records[0].comments.chapter1]); // replace chapter1 with chapter
+      if (!comments[chapter] || !text[chapter]) {
+        return res.status(401).json({ message: "Chapter not found" });
+      }
+
+      return res.json({
+        ...rest,
+        comments: comments[chapter],
+        text: text[chapter],
+      }); // replace chapter1 with chapter
+      // return res.json([records[0].text.chapter, records[0].comments.chapter]); // replace chapter1 with chapter
     } else {
       res.status(401).json({ message: "Nonexistent book/author" });
     }
@@ -47,7 +62,7 @@ recordRoutes.get("/getbook", async (req, res) => {
   }
 });
 
-//Javascript program for implementation of KMP pattern
+// Javascript program for implementation of KMP pattern
 // searching algorithm
 
 function computeLPSArray(pat, M, lps) {
@@ -127,23 +142,26 @@ function KMPSearch(pat, txt) {
 // comments field, each chapter maps to a list of maps that have start, end indices, "content" comment fields
 
 // array of arrays, each sub array has chapter number and then text
+// to test, sample search is http://localhost:8000/searchbook?bookId=2&pat=seldom
 recordRoutes.get("/searchbook", async (req, res) => {
   let db = client.db(dbName);
-  //   const {bookId, pat} = req.query;
+  const { bookId, pat } = req.query;
+  if (!bookId || !pat) {
+    return res
+      .status(400)
+      .json({ message: "Both bookId and pat are required" });
+  }
   try {
     var records = await db
       .collection("books")
-      .find({ bookID: "2" }) // replace "2" with bookId
+      .find({ bookID: bookId }) // replace "2" with bookId
       .toArray();
-    console.log("hi");
     if (records.length > 0) {
-      console.log("hi2");
       let matches = {};
       console.log(records[0].numChapters);
       for (let i = 0; i < parseInt(records[0].numChapters); i++) {
-        console.log("books are slay");
         matches[i + 1] = KMPSearch(
-          "seldom",
+          pat,
           records[0].text["chapter" + (i + 1).toString()]
         ); // change "text" to pat
       }
@@ -163,13 +181,15 @@ recordRoutes.put("/addcomment", async (req, res) => {
   //   const { id } = req.params; //IGNORE
   //   const newData = req.body; //IGNORE
   let db = client.db(dbName);
-    const {bookId, chapter, startIndex, endIndex, comment} = req.query; // uncomment when integrating
-    console.log("query", req.query)
+  
+  const { bookId, chapter, startIndex, endIndex, comment } = req.body; // uncomment when integrating
+
   // const bookId = "2";
   // const chapter = "chapter2";
   // const startIndex = "20";
   // const endIndex = "50";
   // const comment = "This is the added comment";
+  console.log(req.body);
 
   try {
     const collection = db.collection("books");
@@ -197,6 +217,88 @@ recordRoutes.put("/addcomment", async (req, res) => {
   }
 });
 
+recordRoutes.put("/api/addbook", async (req, res) => {
+  const bookData = req.body;
+  // console.log(bookData);
+
+  try {
+    await client.connect();
+    console.log("Connected correctly to server");
+
+    const db = client.db(dbName);
+    const col = db.collection("books");
+
+    // Insert a single document
+    const result = await col.updateOne(
+      { bookID: bookData.bookID },
+      { $set: bookData },
+      { upsert: true }
+    );
+
+    res.status(200).send({ message: "Book updated", result: result });
+  } catch (err) {
+    console.log(err.stack);
+    res
+      .status(500)
+      .send({ message: "Error connecting to the database", error: err });
+  }
+
+  // Close the connection
+  client.close();
+});
+
+/*
+id={book.id}
+key={book.id}
+author={book.author}
+imgPath={book.imgPath}
+title={book.title}
+genres={book.genres}
+*/
+// gets metadata of all current books
+recordRoutes.get("/api/getbooks", async (req, res) => {
+  let db = client.db(dbName);
+  try {
+    var records = await db
+      .collection("books")
+      .find({}, { projection: { text: 0, comments: 0 } })
+      .toArray();
+    res.status(200).json({
+      status: "success",
+      data: records,
+    });
+  } catch (err) {
+    console.error("Error occurred while getting books:", err);
+    res.status(500).json({
+      status: "error",
+      message: err.message,
+    });
+  }
+});
+
+recordRoutes.put("/api/updatefavorited", async (req, res) => {
+  try {
+    const { bookID, newFavoriteStatus } = req.body; // assuming you're passing an 'id' and 'newFavoriteStatus'
+    // console.log(bookID, newFavoriteStatus);
+    let db = client.db(dbName);
+
+    const result = await db.collection("books").updateOne(
+      { bookID: bookID },
+      { $set: { favorited: newFavoriteStatus } } // The update operation
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).send("No document matches the provided query.");
+    }
+
+    res.status(200).send("Document updated successfully.");
+  } catch (error) {
+    res.status(500).send("Error updating document: " + error.message);
+  }
+});
+
 recordRoutes.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+module.exports = { recordRoutes, client };

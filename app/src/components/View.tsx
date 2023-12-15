@@ -7,7 +7,13 @@ import CommentModal from "./CommentModal";
 import { useFloating, offset, flip } from "@floating-ui/react-dom";
 import { SelectedText } from "../types/types";
 import { Comment } from "./types/types";
+import AccessibilityBar from "./AccessibilityBar";
+
 function View() {
+  const [size, setSize] = useState<number>(2);
+  const textSizes = ["sm", "base", "lg", "2xl", "3xl"];
+  const titleSizes = ["base", "lg", "2xl", "3xl", "4xl"];
+
   const { bookId, chapterId } = useParams();
   console.log(bookId, chapterId);
   function handleSearch(value: string) {
@@ -26,11 +32,18 @@ function View() {
     author: string;
     bookID: string;
     comments:  Comment[];
-    genre: string;
-    numChapters: string,
+     genre: string;
+    numChapters: string;
     text: string;
     title: string;
-  }
+      };
+        
+  type Comment = {
+    startIndex: number;
+    endIndex: number;
+    content: string;
+  };
+    
   const [chapterJson, setChapterJson] = useState<ChapterJson>({
     author: "",
     bookID: "",
@@ -84,7 +97,10 @@ function View() {
   };
 
   async function getContent(id: string): Promise<ChapterJson> {
-    const res = await fetch(`http://localhost:8000/getbook/`);
+    const res = await fetch(
+      `http://localhost:8000/getbook/?bookId=${id}&chapter=chapter${chapterId}`
+    );
+    // http://localhost:8000/getbook/?bookId=1&chapter=chapter1
     const data = await res.json();
     setChapterJson(data);
     console.log(data);
@@ -155,8 +171,7 @@ function View() {
 
   useLayoutEffect(() => {
     getContent(bookId!);
-
-  }, [bookId])
+  }, [bookId]);
 
   return (
     <div
@@ -178,13 +193,21 @@ function View() {
         />
       )}
 
-      {/* <h1 className="text-4xl font-bold fixed top-0 w-screen bg-inherit text-center">View: {id}</h1> */}
-      <div className="text-2xl font-bold text-center fixed top-14 w-screen py-4 bg-inherit">
+      <div
+        className={`text-${titleSizes[size]} font-bold text-center fixed top-14 w-screen py-4 bg-inherit`}
+      >
         {chapterJson["title"]}
       </div>
+
+      <div className="flex w-full justify-end text-black font-merriweather px-40 pt-40 pb-10">
+        <AccessibilityBar size={size} setSize={setSize} />
+      </div>
+
       <div className="flex flex-row">
         {/* Book */}
-        <div className="text-lg md:text-xl text-black font-merriweather text-left px-10 mx-auto  pt-56 pb-20 flex-grow">
+        <div
+          className={`text-${textSizes[size]} text-black font-merriweather text-left px-10 mx-auto pb-20 flex-grow`}
+        >
           {bookId && <div id="book-content">{chapterJson["text"]}</div>}
         </div>
         {/* Comments */}
