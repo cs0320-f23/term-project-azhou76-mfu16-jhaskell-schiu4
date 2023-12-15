@@ -189,7 +189,7 @@ recordRoutes.put("/addcomment", async (req, res) => {
   // const startIndex = "20";
   // const endIndex = "50";
   // const comment = "This is the added comment";
-  console.log(req.body);
+  console.log(bookId, chapter, startIndex, endIndex, comment);
 
   try {
     const collection = db.collection("books");

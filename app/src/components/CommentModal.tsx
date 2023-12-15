@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useFloating, offset, flip } from "@floating-ui/react-dom";
 import { SelectedText } from "../types/types";
 import { Comment } from "./types/types";
+import { request } from "http";
 interface CommentModalProps {
   selectedText: SelectedText;
   onClose: () => void;
@@ -53,27 +54,51 @@ const CommentModal: React.FC<CommentModalProps> = ({
    */
   async function sendComment({ content, startIndex, endIndex }: Comment) {
     // log all params
-    console.log("Content:", content);
-    console.log("Start Index:", startIndex);
-    console.log("End Index:", endIndex);
-    console.log("Chapter ID:", chapterId);
-    console.log("Book ID:", bookId);
-    const requestOptions = {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        startIndex: startIndex + "",
-        endIndex: endIndex + "",
-        comment: content,
-        chapter: "chapter" + chapterId,
-        bookID: bookId + "",
-      }),
-    };
-    const res = await fetch(`http://localhost:8000/addcomment`, requestOptions);
-    // make sure res is valid
-    console.log("res", res);
+    // const requestOptions = {
+    //   method: "PUT",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     startIndex: startIndex + "",
+    //     endIndex: endIndex + "",
+    //     comment: content,
+    //     chapter: "chapter" + chapterId,
+    //     bookId: bookId + "",
+    //   }),
+    // };
+    // console.log(requestOptions.body);
+    // const res = await fetch(`http://localhost:8000/addcomment`, requestOptions);
+    // // make sure res is valid
+    // console.log("res", res);
+    try {
+    const res = await fetch(
+      `http://localhost:8000/addcomment`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          bookId: bookId + "",
+          chapter: "chapter" + chapterId,
+          startIndex: startIndex + "",
+          endIndex: endIndex + "",
+          comment: content
+        }),
+      }
+    );
+    console.log(JSON.stringify({
+      bookId: bookId + "",
+      chapterID: "chapter" + chapterId,
+      startIndex: startIndex + "",
+      endIndex: endIndex + "",
+      content: content
+    }));
     const json = await res.json();
     console.log(json);
+  }
+  catch {
+    console.log("Error adding comment");
+  }
   }
 
   const handleSubmit = (event: React.FormEvent) => {
