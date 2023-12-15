@@ -181,7 +181,9 @@ recordRoutes.put("/addcomment", async (req, res) => {
   //   const { id } = req.params; //IGNORE
   //   const newData = req.body; //IGNORE
   let db = client.db(dbName);
+  
   const { bookId, chapter, startIndex, endIndex, comment } = req.body; // uncomment when integrating
+
   // const bookId = "2";
   // const chapter = "chapter2";
   // const startIndex = "20";
