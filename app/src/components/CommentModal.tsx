@@ -71,12 +71,9 @@ const CommentModal: React.FC<CommentModalProps> = ({
     };
     const res = await fetch(`http://localhost:8000/addcomment`, requestOptions);
     // make sure res is valid
-    if (res.ok && res.status === 200) {
-      const json = await res.json();
-      console.log(json);
-    } else {
-      console.log("Error sending comment");
-    }
+    console.log("res", res);
+    const json = await res.json();
+    console.log(json);
   }
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -147,7 +144,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
         <form onSubmit={handleSubmit} className="flex flex-col w-15">
           <textarea
             value={comment.content}
-            onChange={(e) =>
+            onChange={e =>
               setComment((currentComment: Comment | undefined) => {
                 return {
                   content: e.target.value,

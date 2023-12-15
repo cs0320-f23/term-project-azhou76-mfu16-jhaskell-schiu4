@@ -207,6 +207,7 @@ recordRoutes.put("/addcomment", async (req, res) => {
       }
     );
     if (result.matchedCount === 0) {
+      console.error("No document matches the provided query.");
       return res.status(404).json({ message: "Document not found" });
     }
 
