@@ -45,7 +45,7 @@ function SearchBar({ onChange, fixed }: SearchBarProps) {
         className="border rounded-md p-2 focus:outline-none peer h-full w-full outline-none text-lg text-gray-700 pr-2"
         id="search"
         placeholder="Search for a book..."
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
       />
       {/* <button className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 focus:outline-none">
         Search
