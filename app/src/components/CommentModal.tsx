@@ -5,17 +5,17 @@ import { Comment } from "./types/types";
 interface CommentModalProps {
   selectedText: SelectedText;
   onClose: () => void;
-  ref: React.RefObject<HTMLDivElement>;
   comment: Comment;
   chapterId: string;
   bookId: string;
+  forwardRef: React.RefObject<HTMLDivElement>;
   setComment: React.Dispatch<React.SetStateAction<Comment>>;
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({
   selectedText,
   onClose,
-  ref,
+  forwardRef,
   comment,
   chapterId,
   bookId,
@@ -126,7 +126,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
         left: 50,
         zIndex: 1000,
       }}
-      ref={ref}
+      ref={forwardRef}
     >
       <div
         ref={floatingRef}

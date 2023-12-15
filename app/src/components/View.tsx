@@ -176,7 +176,7 @@ function View() {
       <ViewBar />
       {isCommentOpen && (
         <CommentModal
-          ref={commentRef}
+          forwardRef={commentRef}
           bookId={bookId!}
           chapterId={chapterId!}
           comment={comment}
