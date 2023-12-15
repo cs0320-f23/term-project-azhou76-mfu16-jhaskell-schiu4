@@ -5,17 +5,17 @@ import { Comment } from "./types/types";
 interface CommentModalProps {
   selectedText: SelectedText;
   onClose: () => void;
-  ref: React.RefObject<HTMLDivElement>;
   comment: Comment;
   chapterId: string;
   bookId: string;
+  forwardRef: React.RefObject<HTMLDivElement>;
   setComment: React.Dispatch<React.SetStateAction<Comment>>;
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({
   selectedText,
   onClose,
-  ref,
+  forwardRef,
   comment,
   chapterId,
   bookId,
@@ -62,24 +62,18 @@ const CommentModal: React.FC<CommentModalProps> = ({
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        startIndex,
-        endIndex,
+        startIndex: startIndex + "",
+        endIndex: endIndex + "",
         comment: content,
-        chapter: chapterId,
-        bookId,
+        chapter: "chapter" + chapterId,
+        bookID: bookId + "",
       }),
     };
-    const res = await fetch(
-      `http://localhost:8000/addcomment?startIndex=${startIndex}&endIndex=${endIndex}&comment=${content}&chapter=${chapterId}&bookId=${bookId}`,
-      requestOptions
-    );
+    const res = await fetch(`http://localhost:8000/addcomment`, requestOptions);
     // make sure res is valid
-    if (res.ok && res.status === 200) {
-      const json = await res.json();
-      console.log(json);
-    } else {
-      console.log("Error sending comment");
-    }
+    console.log("res", res);
+    const json = await res.json();
+    console.log(json);
   }
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -126,7 +120,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
         left: 50,
         zIndex: 1000,
       }}
-      ref={ref}
+      ref={forwardRef}
     >
       <div
         ref={floatingRef}

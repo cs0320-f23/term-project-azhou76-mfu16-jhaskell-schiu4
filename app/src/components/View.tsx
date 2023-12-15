@@ -38,11 +38,6 @@ function View() {
     title: string;
       };
         
-  type Comment = {
-    startIndex: number;
-    endIndex: number;
-    content: string;
-  };
     
   const [chapterJson, setChapterJson] = useState<ChapterJson>({
     author: "",
@@ -181,7 +176,7 @@ function View() {
       <ViewBar />
       {isCommentOpen && (
         <CommentModal
-          ref={commentRef}
+          forwardRef={commentRef}
           bookId={bookId!}
           chapterId={chapterId!}
           comment={comment}
