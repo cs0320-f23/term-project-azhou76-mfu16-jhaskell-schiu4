@@ -31,6 +31,11 @@ const client = new MongoClient(url, {
 recordRoutes.get("/getbook", async (req, res) => {
   let db = client.db(dbName);
   const { bookId, chapter } = req.query;
+  if (!bookId || !pat) {
+    return res
+      .status(400)
+      .json({ message: "Both bookId and pat are required" });
+  }
   try {
     var records = await db
       .collection("books")
@@ -293,3 +298,5 @@ recordRoutes.put("/api/updatefavorited", async (req, res) => {
 recordRoutes.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+module.exports = { recordRoutes };
