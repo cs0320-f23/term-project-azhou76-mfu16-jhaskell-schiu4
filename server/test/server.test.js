@@ -39,7 +39,7 @@ describe('read.js route tests', () => {
     });
 
     it('should return book details', async () => {
-        const response = await supertest(testApp).get('/getbook?bookId=0&chapter=0');
+        const response = await supertest(testApp).get('/getbook?bookId=1&chapter=chapter1');
         expect(response.status).to.equal(200);
     });
 });
