@@ -140,7 +140,8 @@ function View() {
   function getChapterComments(bookId: string, chapterId: string) {
     const bookContent = chapterJson;
 
-    const comments = bookContent.comments as Comment[];
+    let comments = bookContent.comments as Comment[];
+    comments.sort((a, b) => (a.startIndex ?? 0) - (b.startIndex ?? 0));
     return comments;
   }
 
