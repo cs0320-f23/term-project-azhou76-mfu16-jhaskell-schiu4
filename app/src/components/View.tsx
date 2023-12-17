@@ -8,16 +8,23 @@ import { useFloating, offset, flip } from "@floating-ui/react-dom";
 import { SelectedText } from "../types/types";
 import { Comment } from "./types/types";
 import AccessibilityBar from "./AccessibilityBar";
+import Results from "./Results";
 
 function View() {
   const [size, setSize] = useState<number>(2);
   const textSizes = ["sm", "base", "lg", "2xl", "3xl"];
   const titleSizes = ["base", "lg", "2xl", "3xl", "4xl"];
-
+  const [searchResults, setSearchResults] = useState<string[][]>([]);
   const { bookId, chapterId } = useParams();
   console.log(bookId, chapterId);
-  function handleSearch(value: string) {
+  const [searchValue, setSearchValue] = useState<string>("");
+  async function handleSearch(value: string) {
     console.log(value);
+    setSearchValue(value);
+    const res = await fetch(`http://localhost:8000/searchbook?bookId=${bookId}&pat=${value}`);
+    const data = await res.json();
+    console.log("this is the data",data);
+    setSearchResults(data);
   }
 
   const [selectedText, setSelectedText] = useState<SelectedText>({
@@ -221,7 +228,9 @@ function View() {
               //   comment.startIndex,
               //   comment.endIndex
               // );
-              const commentText = document.getElementById("book-content")?.textContent?.slice(comment.startIndex, comment.endIndex);
+              const commentText = document
+                .getElementById("book-content")
+                ?.textContent?.slice(comment.startIndex, comment.endIndex);
 
               return (
                 <div
@@ -236,6 +245,7 @@ function View() {
           )}
         </div>
       </div>
+      <Results searchValue={searchValue} searchResults={searchResults} />
       <SearchBar fixed onChange={handleSearch} />
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
 import Book from "./components/Book";
+import Results from "./components/Results";
 // const books = [
 //   {
 //     id: 1,
@@ -173,8 +174,7 @@ function App() {
           })}
         </div>
       </div>
-
-      <SearchBar onChange={setSearchQuery} fixed />
+        <SearchBar onChange={setSearchQuery} fixed />
     </div>
   );
 }
