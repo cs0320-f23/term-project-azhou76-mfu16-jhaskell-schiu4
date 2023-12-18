@@ -9,9 +9,12 @@ import { SelectedText } from "../types/types";
 import AccessibilityBar from "./AccessibilityBar";
 import Results from "./Results";
 import { ChapterJson, Comment } from "../types/types";
+import { mockChapterJson } from "../data/mockedData";
 
-
-function View() {
+type ViewProps = {
+  IS_MOCKING_DATA: boolean;
+}
+function View({IS_MOCKING_DATA}: ViewProps) {
   const [size, setSize] = useState<number>(2);
   const [searchResults, setSearchResults] = useState<string[][]>([]);
 
@@ -29,6 +32,44 @@ function View() {
     console.log("this is the data",data);
     setSearchResults(data);
   }
+
+  async function mockHandleSearch(value: string) {
+    console.log(value);
+    setSearchValue(value);
+  }
+
+  async function mockGetContent(id: string): Promise<ChapterJson> {
+    const data = mockChapterJson;
+    setChapterJson(data);
+    console.log(data);
+    return data;
+  }
+
+
+
+  const REAL_DICTIONARY = {
+    handleSearch: handleSearch,
+    getContent: getContent,
+  }
+
+  const MOCK_DICTIONARY = {
+    handleSearch: mockHandleSearch,
+    getContent: mockGetContent,
+  }
+
+  type Registry = {
+    handleSearch: (value: string) => void;
+    getContent: (id: string)=> Promise<ChapterJson>
+  };
+
+  let registry: Registry;
+  if (IS_MOCKING_DATA) {
+    registry = MOCK_DICTIONARY;
+  } else {
+    registry = REAL_DICTIONARY;
+  }
+
+  
 
   const [selectedText, setSelectedText] = useState<SelectedText>({
     text: "",
@@ -105,47 +146,13 @@ function View() {
       `http://localhost:8000/getbook/?bookId=${id}&chapter=chapter${chapterId}`
     );
     // http://localhost:8000/getbook/?bookId=1&chapter=chapter1
-    const data = await res.json();
+    const data: ChapterJson = await res.json();
     setChapterJson(data);
     console.log(data);
     return data;
-    const mock = {
-      Title: "Lord of the Rings",
-      comments: {
-        chapter1: [
-          {
-            startIndex: 20,
-            endIndex: 50,
-            content: "This is the first comment on chapter 1",
-          },
-          {
-            startIndex: 60,
-            endIndex: 80,
-            content: "This is the second comment on chapter 1",
-          },
-        ],
-        chapter2: [
-          {
-            startIndex: 20,
-            endIndex: 50,
-            content: "This is the first comment on chapter 2",
-          },
-          {
-            startIndex: 60,
-            endIndex: 80,
-            content: "This is the second comment on chapter 2",
-          },
-        ],
-        chapters: [],
-      },
-      Chapters: {
-        "Chapter 1":
-          "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Totam, officiis? Quia, tenetur optio natus placeat et voluptate repudiandae saepe animi deserunt beatae minima consequatur dolore inventore provident nam veniam aperiam expedita! Sapiente necessitatibus, blanditiis velit quibusdam veniam accusantium, quam doloremque doloribus maiores, labore ex voluptate modi fugit molestiae sed est quo? Optio, voluptatibus corporis reiciendis perspiciatis iste necessitatibus maxime expedita veniam hic distinctio nesciunt quidem aliquam cupiditate dicta fugiat ab, ea ex explicabo. Totam odit tempora ratione debitis quo necessitatibus accusantium, cumque ullam, nam perferendis qui? Deleniti odio quaerat fuga possimus exercitationem? Eum minus dolore ipsum? Iure assumenda harum quod nesciunt. Ipsam ut, veniam porro esse ea labore optio beatae voluptatum quae maxime omnis sint, officiis sequi? Odio obcaecati officia neque, dolor, corporis sunt amet fugiat pariatur ea, expedita dolorum quam. Sint recusandae, aliquam eos, vitae magnam eum repellat nisi quas ipsa sed qui, quos harum omnis alias nihil. Expedita, animi? Explicabo nesciunt illo eum quibusdam, labore neque minus necessitatibus voluptatem id voluptatibus a fugit molestiae maxime, nostrum fugiat esse odio quaerat similique quos cupiditate sint iste. Reprehenderit ducimus veritatis eveniet sit minima, amet commodi, quod consequuntur aliquid soluta laboriosam. Aspernatur, ipsum a qui aliquam saepe id sit necessitatibus eaque fuga mollitia non vitae similique? Quibusdam ipsam molestias earum fugit labore assumenda repellat quaerat tempora! Alias minima, dolores labore quod accusantium quae accusamus ab, vel quos aut enim saepe aspernatur veritatis quisquam, tenetur quibusdam sapiente",
-        "Chapter 2":
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident facilis maxime accusantium. Ratione, fugiat placeat eum fuga eveniet amet porro officiis pariatur hic eius doloribus nihil consequatur laboriosam a, quae deleniti voluptatem quod est enim aut nisi aperiam? Facere ipsum sed quo aliquam eius temporibus sapiente voluptatem molestias provident asperiores, soluta necessitatibus vero voluptate doloribus obcaecati? A perspiciatis dolore voluptatum beatae! Officia ab impedit quia voluptatem, veritatis ea? Accusamus eos labore harum exercitationem et. Nesciunt, incidunt quis reprehenderit assumenda suscipit saepe illo reiciendis, sit qui esse delectus, exercitationem distinctio enim. Enim ad et dolorem? Ratione veritatis eligendi animi laudantium id.",
-      },
-    };
+  
   }
+
   function getChapterComments(bookId: string, chapterId: string) {
     const bookContent = chapterJson;
 
@@ -153,28 +160,8 @@ function View() {
     return comments;
   }
 
-  function extractCommentText(
-    bookText: string,
-    startIndex: number,
-    endIndex: number
-  ): string {
-    if (startIndex >= 0 && endIndex <= bookText.length) {
-      console.log("hi", bookText.slice(startIndex, endIndex));
-      return bookText.slice(startIndex, endIndex);
-    }
-      console.log("hi");
-
-    return "";
-  }
-
-  function getChapterText(bookId: string, chapterId: string): string {
-    const bookContent = chapterJson;
-    const chapter = bookContent.text;
-    return chapter;
-  }
-
   useLayoutEffect(() => {
-    getContent(bookId!);
+    registry["getContent"](bookId!);
   }, [bookId]);
 
   return (
@@ -241,7 +228,7 @@ function View() {
         </div>
       </div>
       <Results searchValue={searchValue} searchResults={searchResults} />
-      <SearchBar fixed onChange={handleSearch} />
+      <SearchBar fixed onChange={registry["handleSearch"]} />
     </div>
   );
 }

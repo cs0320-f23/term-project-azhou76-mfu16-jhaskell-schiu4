@@ -11,11 +11,13 @@ import {
 } from "react-router-dom";
 import View from "./components/View";
 
+const IS_MOCKING_DATA = false; // !change this if MOCKING DATA
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<App />} />
-      <Route path="/media/:bookId/:chapterId" element={<View />} />
+      <Route path="/" element={<App IS_MOCKING_DATA={IS_MOCKING_DATA} />} />
+      <Route path="/media/:bookId/:chapterId" element={<View IS_MOCKING_DATA={IS_MOCKING_DATA} />} />
     </>
   )
 );
