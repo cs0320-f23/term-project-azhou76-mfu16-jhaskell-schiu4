@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import ViewBar from "./ViewBar";
 import SearchBar from "./SearchBar";
@@ -86,6 +86,18 @@ function View({ IS_MOCKING_DATA }: ViewProps) {
     title: "",
   });
 
+
+  const { bookId, chapterId } = useParams();
+  console.log(bookId, chapterId);
+  function handleSearch(value: string) {
+    console.log(value);
+  }
+  useEffect(() => {
+    console.log("Hello world");
+    getContent(bookId!);
+  }, [reloadComments]);
+  
+
   const handleTextSelection = (event: React.MouseEvent) => {
     const selection = window.getSelection();
     if (selection && selection.toString().trim() !== "") {
@@ -151,7 +163,8 @@ function View({ IS_MOCKING_DATA }: ViewProps) {
   function getChapterComments(bookId: string, chapterId: string) {
     const bookContent = chapterJson;
 
-    const comments = bookContent.comments as Comment[];
+    let comments = bookContent.comments as Comment[];
+    comments.sort((a, b) => (a.startIndex ?? 0) - (b.startIndex ?? 0));
     return comments;
   }
 
@@ -173,6 +186,8 @@ function View({ IS_MOCKING_DATA }: ViewProps) {
           comment={comment}
           setComment={setComment}
           selectedText={selectedText}
+          reloadComments={reloadComments}
+          setReloadComments={setReloadComments}
           onClose={function (): void {
             setIsCommentOpen(false);
           }}

@@ -105,6 +105,14 @@ function App({ IS_MOCKING_DATA }: AppProps) {
           className="grid grid-cols-4 w-screen h-screen overflow-y-auto"
           data-testid={"books"}
         >
+        {
+          filteredBooks.length === 0 && (
+            <div className="flex flex-col items-center justify-center col-span-4">
+              <h1 className="text-2xl text-gray-600">No books found.</h1>
+              <h2 className="text-xl text-gray-600">Please try again later!</h2>
+            </div>
+          )
+        }
           {filteredBooks.map((book: any) => {
             return (
               <Book

@@ -298,6 +298,33 @@ recordRoutes.put("/api/updatefavorited", async (req, res) => {
   }
 });
 
+// deletes all instances of a particular comment given specified parameters
+recordRoutes.delete("/deletecomment", async (req, res) => {
+  try {
+    const { bookID, chapter, startIndex, endIndex, content } = req.body;
+    let db = client.db(dbName);
+    const collection = db.collection("books"); // Assuming comments are within 'books' collection
+
+    console.log(bookID, chapter, startIndex, endIndex, content);
+
+    // Update the document in the database to remove the specific comment
+    const result = await collection.updateOne(
+      { bookID: bookID },
+      { $pull: { [`comments.${"chapter" + chapter}`]: { startIndex: startIndex, endIndex: endIndex, content: content } } }
+    );
+
+    if (result.modifiedCount === 0) {
+      res.status(404).send("Comment not found or no change made.");
+    } else {
+      res.status(200).send("Comment deleted successfully.");
+    }
+  }
+  catch (error) {
+    res.status(500).send("Error deleting comment: " + error.message);
+  }
+});
+
+
 recordRoutes.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });

@@ -10,6 +10,8 @@ interface CommentModalProps {
   bookId: string;
   forwardRef: React.RefObject<HTMLDivElement>;
   setComment: React.Dispatch<React.SetStateAction<Comment>>;
+  setReloadComments: React.Dispatch<React.SetStateAction<number>>;
+  reloadComments: number
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({
@@ -20,6 +22,8 @@ const CommentModal: React.FC<CommentModalProps> = ({
   chapterId,
   bookId,
   setComment,
+  setReloadComments,
+  reloadComments
 }) => {
   const floatingRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -104,6 +108,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
     event.preventDefault();
     console.log("Comment:", comment); // Handle the comment submission here
     sendComment(comment);
+    setReloadComments(reloadComments + 1)
     onClose(); // Close the modal
   };
 
