@@ -1,6 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import NavBar from "./NavBar";
 import ViewBar from "./ViewBar";
 import SearchBar from "./SearchBar";
 import CommentModal from "./CommentModal";
