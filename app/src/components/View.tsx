@@ -1,8 +1,8 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import NavBar from "./Navbar";
+import NavBar from "./NavBar";
 import ViewBar from "./ViewBar";
-import SearchBar from "./Searchbar";
+import SearchBar from "./SearchBar";
 import CommentModal from "./CommentModal";
 import { useFloating, offset, flip } from "@floating-ui/react-dom";
 import { SelectedText } from "../types/types";
