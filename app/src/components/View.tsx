@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import NavBar from "./NavBar";
 import ViewBar from "./ViewBar";
@@ -15,23 +15,8 @@ function View() {
   const textSizes = ["sm", "base", "lg", "2xl"];
   const titleSizes = ["base", "lg", "2xl", "2xl"];
 
-  const { bookId, chapterId } = useParams();
-  console.log(bookId, chapterId);
-  function handleSearch(value: string) {
-    console.log(value);
-  }
-
-  const [selectedText, setSelectedText] = useState<SelectedText>({
-    text: "",
-    needsCutoff: false,
-  });
-  const [isCommentOpen, setIsCommentOpen] = useState<boolean>(false);
-  const commentRef = useRef<HTMLDivElement>(null);
-  // make sure title, author, and content are all strings and keys
-  
-
-        
-    
+  const [comment, setComment] = useState<Comment>({content: undefined, startIndex: undefined, endIndex: undefined});
+  const [reloadComments, setReloadComments] = useState<number>(0);
   const [chapterJson, setChapterJson] = useState<ChapterJson>({
     author: "",
     bookID: "",
@@ -41,6 +26,26 @@ function View() {
     text: "",
     title: "",
   });
+
+  const [selectedText, setSelectedText] = useState<SelectedText>({
+    text: "",
+    needsCutoff: false,
+  });
+  const [isCommentOpen, setIsCommentOpen] = useState<boolean>(false);
+  const commentRef = useRef<HTMLDivElement>(null);
+  // make sure title, author, and content are all strings and keys
+
+
+  const { bookId, chapterId } = useParams();
+  console.log(bookId, chapterId);
+  function handleSearch(value: string) {
+    console.log(value);
+  }
+  useEffect(() => {
+    console.log("Hello world");
+    getContent(bookId!);
+  }, [reloadComments]);
+  
 
   const handleTextSelection = (event: React.MouseEvent) => {
     const selection = window.getSelection();
@@ -63,8 +68,6 @@ function View() {
       }
     }
   };
-
-  const [comment, setComment] = useState<Comment>({content: undefined, startIndex: undefined, endIndex: undefined});
 
 
   document.onmouseup = function (): void {
@@ -165,9 +168,7 @@ function View() {
     return chapter;
   }
 
-  useLayoutEffect(() => {
-    getContent(bookId!);
-  }, [bookId]);
+
 
   return (
     <div
@@ -183,6 +184,8 @@ function View() {
           comment={comment}
           setComment={setComment}
           selectedText={selectedText}
+          reloadComments={reloadComments}
+          setReloadComments={setReloadComments}
           onClose={function (): void {
             setIsCommentOpen(false);
           }}
