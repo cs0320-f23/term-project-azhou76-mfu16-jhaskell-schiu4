@@ -16,6 +16,7 @@ type ViewProps = {
 function View({ IS_MOCKING_DATA }: ViewProps) {
   const [size, setSize] = useState<number>(2);
   const [searchResults, setSearchResults] = useState<string[][]>([]);
+  const [reloadComments, setReloadComments] = useState<number>(0);
 
   const textSizes = ["sm", "base", "lg", "2xl"];
   const titleSizes = ["base", "lg", "2xl", "2xl"];
@@ -87,11 +88,11 @@ function View({ IS_MOCKING_DATA }: ViewProps) {
   });
 
 
-  const { bookId, chapterId } = useParams();
-  console.log(bookId, chapterId);
-  function handleSearch(value: string) {
-    console.log(value);
-  }
+  // const { bookId, chapterId } = useParams();
+  // console.log(bookId, chapterId);
+  // function handleSearch(value: string) {
+  //   console.log(value);
+  // }
   useEffect(() => {
     console.log("Hello world");
     getContent(bookId!);

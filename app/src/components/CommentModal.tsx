@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useFloating, offset, flip } from "@floating-ui/react-dom";
 import { SelectedText, Comment } from "../types/types";
-import { request } from "http";
+// import { request } from "http";
 interface CommentModalProps {
   selectedText: SelectedText;
   onClose: () => void;
