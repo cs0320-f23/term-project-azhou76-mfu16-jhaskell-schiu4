@@ -1,8 +1,8 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import NavBar from "./NavBar";
+import NavBar from "./Navbar";
 import ViewBar from "./ViewBar";
-import SearchBar from "./SearchBar";
+import SearchBar from "./Searchbar";
 import CommentModal from "./CommentModal";
 import { useFloating, offset, flip } from "@floating-ui/react-dom";
 import { SelectedText } from "../types/types";
@@ -13,8 +13,8 @@ import { mockChapterJson } from "../data/mockedData";
 
 type ViewProps = {
   IS_MOCKING_DATA: boolean;
-}
-function View({IS_MOCKING_DATA}: ViewProps) {
+};
+function View({ IS_MOCKING_DATA }: ViewProps) {
   const [size, setSize] = useState<number>(2);
   const [searchResults, setSearchResults] = useState<string[][]>([]);
 
@@ -27,9 +27,11 @@ function View({IS_MOCKING_DATA}: ViewProps) {
   async function handleSearch(value: string) {
     console.log(value);
     setSearchValue(value);
-    const res = await fetch(`http://localhost:8000/searchbook?bookId=${bookId}&pat=${value}`);
+    const res = await fetch(
+      `http://localhost:8000/searchbook?bookId=${bookId}&pat=${value}`
+    );
     const data = await res.json();
-    console.log("this is the data",data);
+    console.log("this is the data", data);
     setSearchResults(data);
   }
 
@@ -45,21 +47,19 @@ function View({IS_MOCKING_DATA}: ViewProps) {
     return data;
   }
 
-
-
   const REAL_DICTIONARY = {
     handleSearch: handleSearch,
     getContent: getContent,
-  }
+  };
 
   const MOCK_DICTIONARY = {
     handleSearch: mockHandleSearch,
     getContent: mockGetContent,
-  }
+  };
 
   type Registry = {
     handleSearch: (value: string) => void;
-    getContent: (id: string)=> Promise<ChapterJson>
+    getContent: (id: string) => Promise<ChapterJson>;
   };
 
   let registry: Registry;
@@ -69,8 +69,6 @@ function View({IS_MOCKING_DATA}: ViewProps) {
     registry = REAL_DICTIONARY;
   }
 
-  
-
   const [selectedText, setSelectedText] = useState<SelectedText>({
     text: "",
     needsCutoff: false,
@@ -78,10 +76,7 @@ function View({IS_MOCKING_DATA}: ViewProps) {
   const [isCommentOpen, setIsCommentOpen] = useState<boolean>(false);
   const commentRef = useRef<HTMLDivElement>(null);
   // make sure title, author, and content are all strings and keys
-  
 
-        
-    
   const [chapterJson, setChapterJson] = useState<ChapterJson>({
     author: "",
     bookID: "",
@@ -114,8 +109,11 @@ function View({IS_MOCKING_DATA}: ViewProps) {
     }
   };
 
-  const [comment, setComment] = useState<Comment>({content: undefined, startIndex: undefined, endIndex: undefined});
-
+  const [comment, setComment] = useState<Comment>({
+    content: undefined,
+    startIndex: undefined,
+    endIndex: undefined,
+  });
 
   document.onmouseup = function (): void {
     const selection: Selection | null = window.getSelection();
@@ -128,16 +126,15 @@ function View({IS_MOCKING_DATA}: ViewProps) {
       if (start > end) {
         [start, end] = [end, start];
       }
-      if(selection.anchorNode?.parentElement?.id === "book-content") {
-          setComment(currentComment => ({
-            content: currentComment?.content,
-            startIndex: start,
-            endIndex: end,
-          }));
-          console.log("Start index: " + start);
-          console.log("End index: " + end);
+      if (selection.anchorNode?.parentElement?.id === "book-content") {
+        setComment((currentComment) => ({
+          content: currentComment?.content,
+          startIndex: start,
+          endIndex: end,
+        }));
+        console.log("Start index: " + start);
+        console.log("End index: " + end);
       }
-    
     }
   };
 
@@ -150,7 +147,6 @@ function View({IS_MOCKING_DATA}: ViewProps) {
     setChapterJson(data);
     console.log(data);
     return data;
-  
   }
 
   function getChapterComments(bookId: string, chapterId: string) {
@@ -191,7 +187,11 @@ function View({IS_MOCKING_DATA}: ViewProps) {
       </div>
 
       <div className="flex w-full justify-end text-black font-merriweather px-40 pt-40 pb-10">
-        <AccessibilityBar size={size} setSize={setSize} chapterInfo={chapterJson} />
+        <AccessibilityBar
+          size={size}
+          setSize={setSize}
+          chapterInfo={chapterJson}
+        />
       </div>
 
       <div className="flex flex-row">

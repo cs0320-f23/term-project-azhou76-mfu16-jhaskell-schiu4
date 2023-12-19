@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "./components/NavBar";
-import SearchBar from "./components/SearchBar";
+import NavBar from "./components/Navbar";
+import SearchBar from "./components/Searchbar";
 import Book from "./components/Book";
 import Results from "./components/Results";
 import { mockedData } from "./data/mockedData";
@@ -14,8 +14,6 @@ const mockedRegistry = {
 const realRegistry = {
   getBooks: getBooks,
 };
-
-
 
 async function getMockedBooks() {
   const data = mockedData;
@@ -57,8 +55,8 @@ async function getBooks() {
 }
 type AppProps = {
   IS_MOCKING_DATA: boolean;
-}
-function App({IS_MOCKING_DATA}: AppProps) {
+};
+function App({ IS_MOCKING_DATA }: AppProps) {
   let registry: Record<string, Function>;
   if (IS_MOCKING_DATA) {
     registry = mockedRegistry;
@@ -103,7 +101,10 @@ function App({IS_MOCKING_DATA}: AppProps) {
 
       <div className="flex-grow my-8">
         {/* Main content */}
-        <div className="grid grid-cols-4 w-screen h-screen overflow-y-auto">
+        <div
+          className="grid grid-cols-4 w-screen h-screen overflow-y-auto"
+          data-testid={"books"}
+        >
           {filteredBooks.map((book: any) => {
             return (
               <Book
