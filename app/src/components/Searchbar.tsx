@@ -16,7 +16,10 @@ window.addEventListener("keydown", function (e) {
     document.getElementById("search")?.blur(); // Defocuses the currently focused element
   }
 });
+
 function SearchBar({ onChange, fixed }: SearchBarProps) {
+  const [searchValue, setSearchValue] = React.useState("");
+
   return (
     // <div className="inline-flex items-center space-x-2">
     <div
@@ -40,13 +43,31 @@ function SearchBar({ onChange, fixed }: SearchBarProps) {
           />
         </svg>
       </div>
-      <input
-        type="text"
-        className="border rounded-md p-2 focus:outline-none peer h-full w-full outline-none text-lg text-gray-700 pr-2"
-        id="search"
-        placeholder="Search for a book..."
-        onChange={(e) => onChange(e.target.value)}
-      />
+      <form
+        className="h-full w-full flex items-center justify-center "
+        onSubmit={(e) => {
+          // Defensive programming: check if the search value is empty
+          e.preventDefault();
+          if (searchValue.length > 0) {
+            onChange(searchValue);
+          }
+        }}
+      >
+        <input
+          type="text"
+          className="border rounded-md p-2 focus:outline-none peer h-full w-full outline-none text-lg text-gray-700 pr-2"
+          id="search"
+          placeholder="Search for a book..."
+          onChange={(e) => setSearchValue(e.target.value)}
+          data-testid={"searchbarfill"}
+        />
+        <input
+          type="submit"
+          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 focus:outline-none"
+          value="Search"
+          data-testid={"searchbarclick"}
+        />
+      </form>
       {/* <button className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 focus:outline-none">
         Search
       </button> */}
